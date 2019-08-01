@@ -19,8 +19,8 @@ package com.gmail.tracebachi.FloorIsLava.Utils;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 8/26/16.
  */
-public class ItemUseDelay
-{
+public class ItemUseDelay {
+
     public long tnt = 0;
     public long hook = 0;
     public long web = 0;

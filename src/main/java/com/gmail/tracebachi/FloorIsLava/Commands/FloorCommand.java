@@ -29,53 +29,42 @@ import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.GOOD;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class FloorCommand implements CommandExecutor
-{
+public class FloorCommand implements CommandExecutor {
+
     private final Arena arena;
 
-    public FloorCommand(Arena arena)
-    {
+    public FloorCommand(Arena arena) {
         this.arena = arena;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
-        if(!(sender instanceof Player))
-        {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(BAD + "This command can only be used by players.");
             return true;
         }
 
         Player player = (Player) sender;
 
-        if(args.length >= 2 && args[0].startsWith("w")) // W = wager
-        {
+        if (args.length >= 2 && args[0].startsWith("w")) { // W = wager
             Integer amount = parseInt(args[1]);
 
-            if(amount == null || amount <= 0)
-            {
+            if (amount == null || amount <= 0) {
                 player.sendMessage(BAD + args[0] + " is an invalid amount.");
                 return true;
             }
 
             arena.wager(amount, player);
-        }
-        else if(args.length >= 1 && args[0].startsWith("c")) // C = count
-        {
+        } else if (args.length >= 1 && args[0].startsWith("c")) { // C = count
             String status = arena.hasStarted() ? "started." : "waiting.";
 
             player.sendMessage(GOOD + "There are " +
-                arena.getPlayingSize() + " players " + status);
+                    arena.getPlayingSize() + " players " + status);
             player.sendMessage(GOOD + "Wager: $" +
-                arena.getWager() + "");
-        }
-        else if(args.length >= 1 && args[0].startsWith("l")) // L = leave
-        {
+                    arena.getWager() + "");
+        } else if (args.length >= 1 && args[0].startsWith("l")) { // L = leave
             arena.leave(player);
-        }
-        else
-        {
+        } else {
             FloorGuiMenu menu = new FloorGuiMenu(arena);
             menu.showTo(player);
         }
@@ -83,14 +72,10 @@ public class FloorCommand implements CommandExecutor
         return true;
     }
 
-    private Integer parseInt(String src)
-    {
-        try
-        {
+    private Integer parseInt(String src) {
+        try {
             return Integer.parseInt(src);
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return null;
         }
     }

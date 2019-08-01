@@ -28,77 +28,58 @@ import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.GOOD;
 /**
  * Created by Jeremy Lugo on 4/10/2017.
  */
-public class FloorHoloCommand implements CommandExecutor
-{
+public class FloorHoloCommand implements CommandExecutor {
+
     private final FloorLeaderboard floorLeaderboard;
 
-    public FloorHoloCommand(FloorLeaderboard floorLeaderboard)
-    {
+    public FloorHoloCommand(FloorLeaderboard floorLeaderboard) {
         this.floorLeaderboard = floorLeaderboard;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
-        if(!sender.hasPermission("FloorIsLava.Staff"))
-        {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if (!sender.hasPermission("FloorIsLava.Staff")) {
             sender.sendMessage(BAD + "You do not have access to this command!");
             return true;
         }
 
-        if(!(sender instanceof Player))
-        {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(BAD + "This command can only be used by players.");
             return true;
         }
 
         Player player = (Player) sender;
 
-        if(args.length == 0)
-        {
+        if (args.length == 0) {
             player.sendMessage(BAD + "/floorholo [place, remove, reset]");
             return true;
         }
 
-        if(args[0].equalsIgnoreCase("place"))
-        {
+        if (args[0].equalsIgnoreCase("place")) {
             floorLeaderboard.addNewLeaderboard(player.getLocation());
             player.sendMessage(GOOD + "Leaderboard placed.");
-        }
-        else if(args[0].equalsIgnoreCase("remove"))
-        {
-            if(args.length >= 2 && parseInt(args[1]) != null)
-            {
+        } else if (args[0].equalsIgnoreCase("remove")) {
+            if (args.length >= 2 && parseInt(args[1]) != null) {
                 int index = parseInt(args[1]);
                 floorLeaderboard.removeLeaderboard(index);
                 player.sendMessage(GOOD + "Leaderboard removed.");
-            }
-            else
-            {
+            } else {
                 player.sendMessage(BAD + "/floorholo remove <index>");
             }
-        }
-        else if(args[0].equalsIgnoreCase("reset"))
-        {
+        } else if (args[0].equalsIgnoreCase("reset")) {
             floorLeaderboard.resetScores();
             player.sendMessage(GOOD + "Scores reset.");
-        }
-        else
-        {
+        } else {
             player.sendMessage(BAD + "/floorholo [place, remove, reset]");
         }
 
         return true;
     }
 
-    private Integer parseInt(String src)
-    {
-        try
-        {
+    private Integer parseInt(String src) {
+        try {
             return Integer.parseInt(src);
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return null;
         }
     }

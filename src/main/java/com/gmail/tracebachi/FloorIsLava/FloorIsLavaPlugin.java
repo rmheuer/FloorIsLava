@@ -33,41 +33,35 @@ import java.io.File;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class FloorIsLavaPlugin extends JavaPlugin
-{
+public class FloorIsLavaPlugin extends JavaPlugin {
+
     private static FloorIsLavaPlugin instance;
     private Arena arena;
     private FloorGuiMenuListener listener;
     private Economy economy;
 
     @Override
-    public void onLoad()
-    {
+    public void onLoad() {
         instance = this;
         File config = new File(getDataFolder(), "config.yml");
-        if(!config.exists())
-        {
+        if (!config.exists()) {
             saveDefaultConfig();
         }
     }
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         reloadConfig();
 
         /*********************************************************************/
         RegisteredServiceProvider<Economy> economyProvider = getServer()
-            .getServicesManager()
-            .getRegistration(net.milkbowl.vault.economy.Economy.class);
+                .getServicesManager()
+                .getRegistration(net.milkbowl.vault.economy.Economy.class);
 
-        if(economyProvider == null)
-        {
+        if (economyProvider == null) {
             getLogger().severe("Economy provider not found! FloorIsLava will not be enabled.");
             return;
-        }
-        else
-        {
+        } else {
             economy = economyProvider.getProvider();
         }
         /*********************************************************************/
@@ -85,8 +79,7 @@ public class FloorIsLavaPlugin extends JavaPlugin
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         getCommand("mfloor").setExecutor(null);
         getCommand("floorbooster").setExecutor(null);
         getCommand("floorholo").setExecutor(null);
@@ -100,13 +93,11 @@ public class FloorIsLavaPlugin extends JavaPlugin
         arena.getFloorLeaderboard().clear();
     }
 
-    public Economy getEconomy()
-    {
+    public Economy getEconomy() {
         return economy;
     }
 
-    public static FloorIsLavaPlugin getInstance()
-    {
+    public static FloorIsLavaPlugin getInstance() {
         return instance;
     }
 }

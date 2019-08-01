@@ -30,8 +30,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class FloorGuiMenu implements Listener
-{
+public class FloorGuiMenu implements Listener {
+
     public static final ItemStack JOIN_ITEM = new ItemStack(Material.LEATHER_CHESTPLATE);
     public static final ItemStack LEAVE_ITEM = new ItemStack(Material.LEATHER_LEGGINGS);
     public static final ItemStack SCORE_ITEM = new ItemStack(Material.NETHER_STAR);
@@ -50,21 +50,19 @@ public class FloorGuiMenu implements Listener
     private Arena arena;
     private Inventory inventory;
 
-    public FloorGuiMenu(Arena arena)
-    {
+    public FloorGuiMenu(Arena arena) {
         this.arena = arena;
         this.inventory = Bukkit.createInventory(null, 27, "Floor Is Lava Menu");
     }
 
-    public void showTo(Player player)
-    {
+    public void showTo(Player player) {
         String name = player.getName();
         Loadout loadout = arena.getLoadoutMap().getOrDefault(name, new Loadout());
 
         ItemStack scoreClone = SCORE_ITEM.clone();
         ItemMeta meta = scoreClone.getItemMeta();
         meta.setLore(Collections.singletonList(ChatColor.WHITE + "Floor Is Lava wins: "
-            + arena.getFloorLeaderboard().getScore(name)));
+                + arena.getFloorLeaderboard().getScore(name)));
         scoreClone.setItemMeta(meta);
 
         inventory.setItem(2, JOIN_ITEM);
@@ -87,16 +85,14 @@ public class FloorGuiMenu implements Listener
         player.openInventory(inventory);
     }
 
-    private ItemStack cloneWithAmount(ItemStack itemStack, int amount)
-    {
+    private ItemStack cloneWithAmount(ItemStack itemStack, int amount) {
         ItemStack itemStackClone = itemStack.clone();
         itemStackClone.setAmount(amount);
 
         return itemStackClone;
     }
 
-    static
-    {
+    static {
         ItemMeta meta = JOIN_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Join");
         meta.setLore(Collections.singletonList(ChatColor.WHITE + "Click to join Floor Is Lava"));
@@ -119,10 +115,10 @@ public class FloorGuiMenu implements Listener
         meta = HELP_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Menu");
         meta.setLore(Arrays.asList(ChatColor.WHITE + "  /floor",
-            ChatColor.YELLOW + "Wagering Money",
-            ChatColor.WHITE + "  /floor wager [amount]",
-            ChatColor.YELLOW + "Arena Status",
-            ChatColor.WHITE + "  /floor count"));
+                ChatColor.YELLOW + "Wagering Money",
+                ChatColor.WHITE + "  /floor wager [amount]",
+                ChatColor.YELLOW + "Arena Status",
+                ChatColor.WHITE + "  /floor count"));
         HELP_ITEM.setItemMeta(meta);
 
         meta = POINTS_ITEM.getItemMeta();
@@ -132,65 +128,65 @@ public class FloorGuiMenu implements Listener
         meta = TNT_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Throwing TNT ");
         meta.setLore(Arrays.asList(
-            ChatColor.WHITE + "Throw ignited tnt at",
-            ChatColor.WHITE + "players by right clicking it!",
-            ChatColor.YELLOW + "Left Click: Add",
-            ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "Throw ignited tnt at",
+                ChatColor.WHITE + "players by right clicking it!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         TNT_ITEM.setItemMeta(meta);
 
         meta = HOOK_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Player Launcher");
         meta.setLore(Arrays.asList(
-            ChatColor.WHITE + "Launches players in the",
-            ChatColor.WHITE + "air by right clicking them!",
-            ChatColor.YELLOW + "Left Click: Add",
-            ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "Launches players in the",
+                ChatColor.WHITE + "air by right clicking them!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         HOOK_ITEM.setItemMeta(meta);
 
         meta = WEB_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Webber");
         meta.setLore(Arrays.asList(
-            ChatColor.WHITE + "Create a box of webs around a",
-            ChatColor.WHITE + "player by right clicking them!",
-            ChatColor.YELLOW + "Left Click: Add",
-            ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "Create a box of webs around a",
+                ChatColor.WHITE + "player by right clicking them!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         WEB_ITEM.setItemMeta(meta);
 
         meta = HOOK_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Rod of Invisibility");
         meta.setLore(Arrays.asList(
-            ChatColor.WHITE + "Become invisible and",
-            ChatColor.WHITE + "sneak up on your opponents!",
-            ChatColor.YELLOW + "Left Click: Add",
-            ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "Become invisible and",
+                ChatColor.WHITE + "sneak up on your opponents!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         INVIS_ITEM.setItemMeta(meta);
 
         meta = BOOST_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Boost");
         meta.setLore(Arrays.asList(
-            ChatColor.WHITE + "Launch yourself in the",
-            ChatColor.WHITE + "air to get away from danger!",
-            ChatColor.YELLOW + "Left Click: Add",
-            ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "Launch yourself in the",
+                ChatColor.WHITE + "air to get away from danger!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         BOOST_ITEM.setItemMeta(meta);
 
         meta = CHIKUN_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Chikun Bomb");
         meta.setLore(Arrays.asList(
-                    ChatColor.WHITE + "Instantly spawn in",
-                    ChatColor.WHITE + "chikun distractions!",
-                    ChatColor.YELLOW + "Left Click: Add",
-                    ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "Instantly spawn in",
+                ChatColor.WHITE + "chikun distractions!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         CHIKUN_ITEM.setItemMeta(meta);
 
         meta = STEAL_ITEM.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "Steal");
         meta.setLore(Arrays.asList(
-                    ChatColor.WHITE + "You have a chance to steal an",
-                    ChatColor.WHITE + "ability from an opponent or",
-                    ChatColor.WHITE + "backfire on you!",
-                    ChatColor.YELLOW + "Left Click: Add",
-                    ChatColor.YELLOW + "Right Click: Remove"));
+                ChatColor.WHITE + "You have a chance to steal an",
+                ChatColor.WHITE + "ability from an opponent or",
+                ChatColor.WHITE + "backfire on you!",
+                ChatColor.YELLOW + "Left Click: Add",
+                ChatColor.YELLOW + "Right Click: Remove"));
         STEAL_ITEM.setItemMeta(meta);
     }
 }

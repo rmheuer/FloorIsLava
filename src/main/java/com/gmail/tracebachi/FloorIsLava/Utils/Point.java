@@ -23,21 +23,19 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class Point
-{
+public class Point {
+
     private final int x;
     private final int y;
     private final int z;
     private final double yaw;
     private final double pitch;
 
-    public Point(int x, int y, int z)
-    {
+    public Point(int x, int y, int z) {
         this(x, y, z, 0.0, 0.0);
     }
 
-    public Point(int x, int y, int z, double yaw, double pitch)
-    {
+    public Point(int x, int y, int z, double yaw, double pitch) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -45,8 +43,7 @@ public class Point
         this.pitch = pitch;
     }
 
-    public Point(ConfigurationSection section)
-    {
+    public Point(ConfigurationSection section) {
         this.x = section.getInt("x");
         this.y = section.getInt("y");
         this.z = section.getInt("z");
@@ -54,39 +51,32 @@ public class Point
         this.pitch = section.getDouble("pitch", 0.0);
     }
 
-    public int x()
-    {
+    public int x() {
         return x;
     }
 
-    public int y()
-    {
+    public int y() {
         return y;
     }
 
-    public int z()
-    {
+    public int z() {
         return z;
     }
 
-    public double yaw()
-    {
+    public double yaw() {
         return yaw;
     }
 
-    public double pitch()
-    {
+    public double pitch() {
         return pitch;
     }
 
-    public Location toLocation(World world)
-    {
+    public Location toLocation(World world) {
         return new Location(world, x + 0.5, y, z + 0.5, (float) yaw, (float) pitch);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return x + ", " + y + ", " + z + ", " + yaw + ", " + pitch;
     }
 }

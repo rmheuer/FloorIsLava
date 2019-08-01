@@ -25,8 +25,8 @@ import static org.bukkit.ChatColor.*;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 2/17/16.
  */
-public class Loadout
-{
+public class Loadout {
+
     public static final ItemStack TNT_ITEM = new ItemStack(Material.TNT);
     public static final ItemStack HOOK_ITEM = new ItemStack(Material.TRIPWIRE_HOOK);
     public static final ItemStack WEB_ITEM = new ItemStack(Material.WEB);
@@ -35,12 +35,11 @@ public class Loadout
     public static final ItemStack CHIKUN_ITEM = new ItemStack(Material.EGG);
     public static final ItemStack STEAL_ITEM = new ItemStack(Material.FLINT_AND_STEEL);
 
-    static
-    {
+    static {
         ItemMeta tntMeta = TNT_ITEM.getItemMeta();
         tntMeta.setDisplayName(DARK_RED + "\u2622"
-                    + GOLD + " Throwing TNT "
-                    + DARK_RED + "\u2622");
+                + GOLD + " Throwing TNT "
+                + DARK_RED + "\u2622");
         TNT_ITEM.setItemMeta(tntMeta);
 
         ItemMeta hookMeta = HOOK_ITEM.getItemMeta();
@@ -76,8 +75,7 @@ public class Loadout
     public int chikun;
     public int steal;
 
-    public Loadout()
-    {
+    public Loadout() {
         tnt = 0;
         hook = 0;
         web = 0;
@@ -87,8 +85,7 @@ public class Loadout
         steal = 0;
     }
 
-    public int countSum()
-    {
+    public int countSum() {
         return tnt + hook + web + invis + boost + chikun + steal;
     }
 }

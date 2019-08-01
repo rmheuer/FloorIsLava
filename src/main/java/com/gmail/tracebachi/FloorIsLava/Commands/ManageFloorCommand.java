@@ -28,58 +28,43 @@ import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.GOOD;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class ManageFloorCommand implements CommandExecutor
-{
+public class ManageFloorCommand implements CommandExecutor {
+
     private final FloorIsLavaPlugin plugin;
     private final Arena arena;
 
-    public ManageFloorCommand(FloorIsLavaPlugin plugin, Arena arena)
-    {
+    public ManageFloorCommand(FloorIsLavaPlugin plugin, Arena arena) {
         this.plugin = plugin;
         this.arena = arena;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
-        if(!sender.hasPermission("FloorIsLava.Staff"))
-        {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if (!sender.hasPermission("FloorIsLava.Staff")) {
             sender.sendMessage(BAD + "You do not have access to this command!");
             return true;
         }
 
-        if(args.length == 0)
-        {
+        if (args.length == 0) {
             sender.sendMessage(BAD + "/mfloor [start, stop, reload, enable, disable]");
             return true;
         }
 
-        if(args[0].equalsIgnoreCase("start"))
-        {
+        if (args[0].equalsIgnoreCase("start")) {
             arena.forceStart(sender);
-        }
-        else if(args[0].equalsIgnoreCase("stop"))
-        {
+        } else if (args[0].equalsIgnoreCase("stop")) {
             arena.forceStop(sender, true);
-        }
-        else if(args[0].equalsIgnoreCase("enable"))
-        {
+        } else if (args[0].equalsIgnoreCase("enable")) {
             arena.enableArena(sender);
-        }
-        else if(args[0].equalsIgnoreCase("disable"))
-        {
+        } else if (args[0].equalsIgnoreCase("disable")) {
             arena.disableArena(sender);
-        }
-        else if(args[0].equalsIgnoreCase("reload"))
-        {
+        } else if (args[0].equalsIgnoreCase("reload")) {
             arena.forceStop(sender, true);
             plugin.reloadConfig();
 
             arena.loadConfig(plugin.getConfig());
             sender.sendMessage(GOOD + "Configuration reloaded.");
-        }
-        else
-        {
+        } else {
             sender.sendMessage(BAD + "/mfloor [start, stop, reload, enable, disable]");
         }
         return true;

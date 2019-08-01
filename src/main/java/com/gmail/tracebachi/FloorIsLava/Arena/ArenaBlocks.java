@@ -27,62 +27,49 @@ import java.util.ArrayList;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class ArenaBlocks
-{
+public class ArenaBlocks {
+
     private CuboidArea cuboidArea;
     private ArrayList<BlockState> blockStates = new ArrayList<>();
 
-    public ArenaBlocks(CuboidArea cuboidArea)
-    {
+    public ArenaBlocks(CuboidArea cuboidArea) {
         this.cuboidArea = cuboidArea;
     }
 
-    public CuboidArea getCuboidArea()
-    {
+    public CuboidArea getCuboidArea() {
         return cuboidArea;
     }
 
-    public void save(World world)
-    {
+    public void save(World world) {
         Point lower = cuboidArea.getLower();
         Point upper = cuboidArea.getUpper();
 
-        for(int i = lower.x(); i <= upper.x(); ++i)
-        {
-            for(int j = lower.y(); j <= upper.y(); ++j)
-            {
-                for(int k = lower.z(); k <= upper.z(); ++k)
-                {
+        for (int i = lower.x(); i <= upper.x(); ++i) {
+            for (int j = lower.y(); j <= upper.y(); ++j) {
+                for (int k = lower.z(); k <= upper.z(); ++k) {
                     blockStates.add(world.getBlockAt(i, j, k).getState());
                 }
             }
         }
     }
 
-    public void restore()
-    {
-        for(BlockState state : blockStates)
-        {
+    public void restore() {
+        for (BlockState state : blockStates) {
             state.update(true);
         }
 
         blockStates.clear();
     }
 
-    public void degradeBlocks(World world, int amount)
-    {
+    public void degradeBlocks(World world, int amount) {
         Point lower = cuboidArea.getLower();
         Point upper = cuboidArea.getUpper();
 
-        for(int i = lower.x(); i <= upper.x(); ++i)
-        {
-            for(int j = lower.z(); j <= upper.z(); ++j)
-            {
-                if(i == (lower.x() + amount) || i == (upper.x() - amount) ||
-                    j == (lower.z() + amount) || j == (upper.z() - amount))
-                {
-                    for(int k = lower.y(); k <= upper.y(); ++k)
-                    {
+        for (int i = lower.x(); i <= upper.x(); ++i) {
+            for (int j = lower.z(); j <= upper.z(); ++j) {
+                if (i == (lower.x() + amount) || i == (upper.x() - amount) ||
+                        j == (lower.z() + amount) || j == (upper.z() - amount)) {
+                    for (int k = lower.y(); k <= upper.y(); ++k) {
                         world.getBlockAt(i, k, j).setType(Material.AIR);
                     }
                 }

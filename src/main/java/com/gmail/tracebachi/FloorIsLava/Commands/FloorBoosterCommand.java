@@ -28,67 +28,55 @@ import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.BAD;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class FloorBoosterCommand implements CommandExecutor
-{
+public class FloorBoosterCommand implements CommandExecutor {
+
     private final Arena arena;
 
-    public FloorBoosterCommand(Arena arena)
-    {
+    public FloorBoosterCommand(Arena arena) {
         this.arena = arena;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
-        if(!sender.hasPermission("FloorIsLava.Staff"))
-        {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if (!sender.hasPermission("FloorIsLava.Staff")) {
             sender.sendMessage(BAD + "You do not have access to this command!");
             return true;
         }
 
-        if(args.length == 0)
-        {
+        if (args.length == 0) {
             sender.sendMessage(BAD + "/floorbooster [start, stop]");
             return true;
         }
 
         Booster booster = arena.getBooster();
 
-        if(args[0].equalsIgnoreCase("stop"))
-        {
-            if(!booster.isActive())
-            {
+        if (args[0].equalsIgnoreCase("stop")) {
+            if (!booster.isActive()) {
                 sender.sendMessage(BAD + "A Booster is not active.");
                 return true;
             }
 
             booster.stop();
-        }
-        else if(args[0].equalsIgnoreCase("start"))
-        {
-            if(booster.isActive())
-            {
+        } else if (args[0].equalsIgnoreCase("start")) {
+            if (booster.isActive()) {
                 sender.sendMessage(BAD + "Booster is already active. "
-                            + "To start another one, first type: /floorbooster stop");
+                        + "To start another one, first type: /floorbooster stop");
                 return true;
             }
 
             String owner = "Console";
 
-            if(sender instanceof Player)
-            {
+            if (sender instanceof Player) {
                 owner = sender.getName();
             }
 
             Booster.BoosterType type = Booster.BoosterType.PERMANENT;
 
-            if(args.length >= 2)
-            {
+            if (args.length >= 2) {
                 String requestedType = args[1];
                 Booster.BoosterType newType = Booster.BoosterType.match(requestedType);
 
-                if(newType == null)
-                {
+                if (newType == null) {
                     sender.sendMessage(BAD + "/floorbooster start [1h, 2h, 4h]");
                     return true;
                 }
@@ -97,9 +85,7 @@ public class FloorBoosterCommand implements CommandExecutor
             }
 
             booster.start(owner, type);
-        }
-        else
-        {
+        } else {
             sender.sendMessage(BAD + "/floorbooster [start, stop]");
         }
 

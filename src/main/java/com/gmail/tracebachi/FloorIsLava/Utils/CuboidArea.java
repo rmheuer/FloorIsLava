@@ -26,15 +26,14 @@ import java.util.Random;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 8/26/16.
  */
-public class CuboidArea
-{
+public class CuboidArea {
+
     private static final Random RANDOM = new Random();
 
     private Point upper;
     private Point lower;
 
-    public CuboidArea(ConfigurationSection alpha, ConfigurationSection beta)
-    {
+    public CuboidArea(ConfigurationSection alpha, ConfigurationSection beta) {
         Preconditions.checkNotNull(alpha, "Point was null.");
         Preconditions.checkNotNull(beta, "Point was null.");
 
@@ -45,46 +44,45 @@ public class CuboidArea
         int betaY = beta.getInt("y");
         int betaZ = beta.getInt("z");
 
-        upper = new Point(Math.max(alphaX, betaX),
-            Math.max(alphaY, betaY), Math.max(alphaZ, betaZ));
-        lower = new Point(Math.min(alphaX, betaX),
-            Math.min(alphaY, betaY), Math.min(alphaZ, betaZ));
+        upper = new Point(Math.max(alphaX, betaX), Math.max(alphaY, betaY), Math.max(alphaZ, betaZ));
+        lower = new Point(Math.min(alphaX, betaX), Math.min(alphaY, betaY), Math.min(alphaZ, betaZ));
     }
 
-    public Point getUpper()
-    {
+    public Point getUpper() {
         return upper;
     }
 
-    public Point getLower()
-    {
+    public Point getLower() {
         return lower;
     }
 
-    public boolean isInside(Location loc)
-    {
+    public boolean isInside(Location loc) {
         return isInside(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-    public boolean isInside(int locX, int locY, int locZ)
-    {
-        if(locY > upper.y()) return false;
-        if(locY < lower.y()) return false;
+    public boolean isInside(int locX, int locY, int locZ) {
+        if (locY > upper.y())
+            return false;
+        if (locY < lower.y())
+            return false;
 
-        if(locX > upper.x()) return false;
-        if(locX < lower.x()) return false;
+        if (locX > upper.x())
+            return false;
+        if (locX < lower.x())
+            return false;
 
-        if(locZ > upper.z()) return false;
-        if(locZ < lower.z()) return false;
+        if (locZ > upper.z())
+            return false;
+        if (locZ < lower.z())
+            return false;
         return true;
     }
 
-    public Location getRandomLocationInside(World world)
-    {
+    public Location getRandomLocationInside(World world) {
         return new Location(
-            world,
-            lower.x() + 1 + RANDOM.nextInt(upper.x() - lower.x() - 1) + 0.5,
-            upper.y() - 1,
-            lower.z() + 1 + RANDOM.nextInt(upper.z() - lower.z() - 1) + 0.5);
+                world,
+                lower.x() + 1 + RANDOM.nextInt(upper.x() - lower.x() - 1) + 0.5,
+                upper.y() - 1,
+                lower.z() + 1 + RANDOM.nextInt(upper.z() - lower.z() - 1) + 0.5);
     }
 }

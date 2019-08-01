@@ -24,8 +24,8 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
  */
-public class PlayerState
-{
+public class PlayerState {
+
     private boolean flyAllowed;
     private Location location;
     private ItemStack[] armor;
@@ -33,8 +33,7 @@ public class PlayerState
     private ItemStack[] extra;
     private GameMode gameMode;
 
-    public void save(Player target)
-    {
+    public void save(Player target) {
         gameMode = target.getGameMode();
         flyAllowed = target.getAllowFlight();
 
@@ -46,27 +45,23 @@ public class PlayerState
         extra = target.getInventory().getExtraContents();
     }
 
-    public void restoreInventory(Player target)
-    {
+    public void restoreInventory(Player target) {
         target.setHealth(20.0);
         target.getInventory().setArmorContents(armor);
         target.getInventory().setStorageContents(storage);
         target.getInventory().setExtraContents(extra);
     }
 
-    public void restoreLocation(Player target)
-    {
+    public void restoreLocation(Player target) {
         target.teleport(location);
     }
 
-    public void restoreGameMode(Player target)
-    {
+    public void restoreGameMode(Player target) {
         target.setGameMode(gameMode);
 
-        if(flyAllowed)
-        {
-            target.setAllowFlight( true );
-            target.setFlying( true );
+        if (flyAllowed) {
+            target.setAllowFlight(true);
+            target.setFlying(true);
         }
     }
 }
