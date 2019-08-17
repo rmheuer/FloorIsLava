@@ -124,7 +124,7 @@ public class Arena implements Listener {
         List<String> loseTatoLore = new ArrayList<>();
         loseTatoLore.add("You lost a round of FloorIsLava!");
         loseTatoLore.add("--");
-        loseTatoLore.add("Better luck next time - Fridge");
+        loseTatoLore.add("Better luck next time - Zee");
         loseTatoMeta.setLore(loseTatoLore);
         losePrize.setItemMeta(loseTatoMeta);
     }
@@ -1003,7 +1003,7 @@ public class Arena implements Listener {
         if (playing.size() >= minimumPlayers) {
             countdown = maxCountdown;
             countdownTask = Bukkit.getScheduler().runTaskTimer(plugin,
-                    this::countdownTick, 100, 10);
+                    this::countdownTick, 200, 20);
         } else {
             broadcast(BAD + "Too few players to start.", null);
         }

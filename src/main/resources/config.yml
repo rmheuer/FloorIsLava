@@ -7,7 +7,7 @@ BaseReward: 50
 # The reward for winning (not including wagers)
 WinnerReward: 150
 
-# Countdown amount (countdowns are done every 10 server ticks)
+# Countdown amount
 CountdownInSeconds: 5
 
 # Arena's world

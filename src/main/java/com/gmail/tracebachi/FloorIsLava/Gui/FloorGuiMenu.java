@@ -21,9 +21,11 @@ import com.gmail.tracebachi.FloorIsLava.Utils.Loadout;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -87,7 +89,14 @@ public class FloorGuiMenu implements Listener {
 
     private ItemStack cloneWithAmount(ItemStack itemStack, int amount) {
         ItemStack itemStackClone = itemStack.clone();
-        itemStackClone.setAmount(amount);
+        itemStackClone.setAmount((amount <= 0) ? 1 : amount);
+
+        if(amount >= 1) {
+            itemStackClone.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+            ItemMeta meta = itemStackClone.getItemMeta();
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemStackClone.setItemMeta(meta);
+        }
 
         return itemStackClone;
     }
