@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Leaderboard;
+package com.gmail.tracebachi.floorislava.leaderboard;
 
 /**
  * Created by Jeremy Lugo on 4/10/2017.

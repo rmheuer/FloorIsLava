@@ -1,6 +1,6 @@
-package com.gmail.tracebachi.FloorIsLava.Leaderboard;
+package com.gmail.tracebachi.floorislava.leaderboard;
 
-import com.gmail.tracebachi.FloorIsLava.FloorIsLavaPlugin;
+import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
 import org.bukkit.Bukkit;
 
 import java.util.Comparator;

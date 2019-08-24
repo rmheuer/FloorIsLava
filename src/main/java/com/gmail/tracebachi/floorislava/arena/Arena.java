@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Arena;
+package com.gmail.tracebachi.floorislava.arena;
 
-import com.gmail.tracebachi.FloorIsLava.Booster.Booster;
-import com.gmail.tracebachi.FloorIsLava.FloorIsLavaPlugin;
-import com.gmail.tracebachi.FloorIsLava.Leaderboard.FloorLeaderboard;
-import com.gmail.tracebachi.FloorIsLava.Utils.*;
+import com.gmail.tracebachi.floorislava.booster.Booster;
+import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
+import com.gmail.tracebachi.floorislava.leaderboard.FloorLeaderboard;
+import com.gmail.tracebachi.floorislava.utils.*;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,10 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
@@ -50,8 +48,8 @@ import org.bukkit.util.Vector;
 import java.io.File;
 import java.util.*;
 
-import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.BAD;
-import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.GOOD;
+import static com.gmail.tracebachi.floorislava.utils.ChatStrings.BAD;
+import static com.gmail.tracebachi.floorislava.utils.ChatStrings.GOOD;
 
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
@@ -131,7 +129,7 @@ public class Arena implements Listener {
 
     public void wager(int amount, Player player) {
         String name = player.getName();
-        EconomyResponse response = plugin.getEconomy().withdrawPlayer(name, amount);
+        EconomyResponse response = plugin.getEconomy().withdrawPlayer(player, amount);
 
         if (!response.transactionSuccess()) {
             player.sendMessage(BAD + "You do not have enough funds to wager that amount.");
@@ -224,7 +222,7 @@ public class Arena implements Listener {
 
         player.sendMessage(GOOD + "You have left FloorIsLava.");
         player.setFireTicks(0);
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         broadcast(BAD + name + " has left.", null);
     }
 
@@ -488,7 +486,7 @@ public class Arena implements Listener {
                 decrementAmountOfItemStack(inventory, heldItem);
 
                 for (Player other : Bukkit.getOnlinePlayers()) {
-                    other.hidePlayer(player);
+                    other.hidePlayer(plugin, player);
                 }
 
                 Bukkit.getScheduler().runTaskLater(plugin, () ->
@@ -502,7 +500,7 @@ public class Arena implements Listener {
                     playerToMakeVisible.sendMessage(GOOD + "You are now visible!");
 
                     for (Player other : Bukkit.getOnlinePlayers()) {
-                        other.showPlayer(playerToMakeVisible);
+                        other.showPlayer(plugin, playerToMakeVisible);
                     }
                 }, 60);
 
@@ -653,11 +651,13 @@ public class Arena implements Listener {
     }
 
     @EventHandler
-    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        String name = event.getPlayer().getName();
+    public void onEntityPickupItem(EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player) {
+            String name = event.getEntity().getName();
 
-        if (started && playing.containsKey(name)) {
-            event.setCancelled(true);
+            if (started && playing.containsKey(name)) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -922,11 +922,11 @@ public class Arena implements Listener {
                 state.restoreLocation(player);
                 state.restoreGameMode(player);
                 player.setFireTicks(0);
-                player.setHealth(player.getMaxHealth());
+                player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 
                 player.sendMessage(GOOD + "Thanks for playing!");
                 player.getInventory().addItem(losePrize);
-                plugin.getEconomy().depositPlayer(entry.getKey(), scaledBaseReward);
+                plugin.getEconomy().depositPlayer(player, scaledBaseReward);
                 player.teleport(watchCuboidArea.getRandomLocationInside(world));
 
                 watching.add(player.getName());
@@ -954,7 +954,7 @@ public class Arena implements Listener {
             state.restoreLocation(player);
             state.restoreGameMode(player);
             player.setFireTicks(0);
-            player.setHealth(player.getMaxHealth());
+            player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 
             plugin.getLogger().info(entry.getKey() + " won a round. Amount = " + (scaledWinnerReward + wager));
 
@@ -963,7 +963,7 @@ public class Arena implements Listener {
                     (scaledWinnerReward + wager), player.getName());
 
             player.getInventory().addItem(winPrize);
-            plugin.getEconomy().depositPlayer(entry.getKey(), (scaledWinnerReward + wager));
+            plugin.getEconomy().depositPlayer(player, (scaledWinnerReward + wager));
             wager = 0;
 
             Firework firework = player.getWorld().spawn(
@@ -1018,7 +1018,7 @@ public class Arena implements Listener {
 
             if (player != null) {
                 for (Player other : Bukkit.getOnlinePlayers()) {
-                    other.showPlayer(player);
+                    other.showPlayer(plugin, player);
                 }
             }
         }

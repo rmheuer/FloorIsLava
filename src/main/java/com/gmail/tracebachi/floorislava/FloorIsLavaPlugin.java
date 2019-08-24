@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava;
+package com.gmail.tracebachi.floorislava;
 
-import com.gmail.tracebachi.FloorIsLava.Arena.Arena;
-import com.gmail.tracebachi.FloorIsLava.Commands.FloorBoosterCommand;
-import com.gmail.tracebachi.FloorIsLava.Commands.FloorCommand;
-import com.gmail.tracebachi.FloorIsLava.Commands.FloorHoloCommand;
-import com.gmail.tracebachi.FloorIsLava.Commands.ManageFloorCommand;
-import com.gmail.tracebachi.FloorIsLava.Gui.FloorGuiMenuListener;
-import com.gmail.tracebachi.FloorIsLava.Leaderboard.FloorLeaderboard;
+import com.gmail.tracebachi.floorislava.arena.Arena;
+import com.gmail.tracebachi.floorislava.commands.FloorBoosterCommand;
+import com.gmail.tracebachi.floorislava.commands.FloorCommand;
+import com.gmail.tracebachi.floorislava.commands.FloorHoloCommand;
+import com.gmail.tracebachi.floorislava.commands.ManageFloorCommand;
+import com.gmail.tracebachi.floorislava.gui.FloorGuiMenuListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;

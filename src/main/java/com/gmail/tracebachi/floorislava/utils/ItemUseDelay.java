@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Utils;
+package com.gmail.tracebachi.floorislava.utils;
 
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 8/26/16.

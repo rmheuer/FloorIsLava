@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Leaderboard;
+package com.gmail.tracebachi.floorislava.leaderboard;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.gmail.tracebachi.FloorIsLava.FloorIsLavaPlugin;
+import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

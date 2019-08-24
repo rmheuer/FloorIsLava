@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Commands;
+package com.gmail.tracebachi.floorislava.commands;
 
-import com.gmail.tracebachi.FloorIsLava.Arena.Arena;
-import com.gmail.tracebachi.FloorIsLava.Gui.FloorGuiMenu;
+import com.gmail.tracebachi.floorislava.arena.Arena;
+import com.gmail.tracebachi.floorislava.gui.FloorGuiMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.BAD;
-import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.GOOD;
+import static com.gmail.tracebachi.floorislava.utils.ChatStrings.BAD;
+import static com.gmail.tracebachi.floorislava.utils.ChatStrings.GOOD;
 
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Arena;
+package com.gmail.tracebachi.floorislava.arena;
 
-import com.gmail.tracebachi.FloorIsLava.Utils.CuboidArea;
-import com.gmail.tracebachi.FloorIsLava.Utils.Point;
+import com.gmail.tracebachi.floorislava.utils.CuboidArea;
+import com.gmail.tracebachi.floorislava.utils.Point;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;

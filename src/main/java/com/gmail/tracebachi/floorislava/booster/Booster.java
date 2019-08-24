@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with FloorIsLava.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.FloorIsLava.Booster;
+package com.gmail.tracebachi.floorislava.booster;
 
-import com.gmail.tracebachi.FloorIsLava.Arena.Arena;
-import com.gmail.tracebachi.FloorIsLava.FloorIsLavaPlugin;
+import com.gmail.tracebachi.floorislava.arena.Arena;
+import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,7 +25,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import static com.gmail.tracebachi.FloorIsLava.Utils.ChatStrings.GOOD;
+import static com.gmail.tracebachi.floorislava.utils.ChatStrings.GOOD;
 
 /**
  * Created by Jeremy Lugo (Refrigerbater) on 6/12/2016.
