@@ -44,7 +44,6 @@ public class ManageFloorCommand implements CommandExecutor {
             sender.sendMessage(BAD + "You do not have access to this command!");
             return true;
         }
-
         if (args.length == 0) {
             sender.sendMessage(BAD + "/mfloor [start, stop, reload, enable, disable]");
             return true;
@@ -61,7 +60,6 @@ public class ManageFloorCommand implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("reload")) {
             arena.forceStop(sender, true);
             plugin.reloadConfig();
-
             arena.loadConfig(plugin.getConfig());
             sender.sendMessage(GOOD + "Configuration reloaded.");
         } else {

@@ -36,9 +36,7 @@ public class PlayerState {
     public void save(Player target) {
         gameMode = target.getGameMode();
         flyAllowed = target.getAllowFlight();
-
         target.setGameMode(GameMode.SURVIVAL);
-
         location = target.getLocation();
         armor = target.getInventory().getArmorContents();
         storage = target.getInventory().getStorageContents();
@@ -58,7 +56,6 @@ public class PlayerState {
 
     public void restoreGameMode(Player target) {
         target.setGameMode(gameMode);
-
         if (flyAllowed) {
             target.setAllowFlight(true);
             target.setFlying(true);

@@ -47,21 +47,16 @@ public class FloorGuiMenuListener implements Listener {
         Inventory inventory = event.getInventory();
         ItemStack clickedItem = event.getCurrentItem();
 
-        if (!inventory.getName().equals("Floor Is Lava Menu")) {
+        if (!event.getView().getTitle().equals("Floor Is Lava Menu"))
             return;
-        }
-
-        if (clickedItem == null) {
+        if (clickedItem == null)
             return;
-        }
 
         event.setCancelled(true);
-
         Map<String, Loadout> loadoutMap = arena.getLoadoutMap();
         Player player = (Player) event.getWhoClicked();
         String name = player.getName();
         Loadout loadout = loadoutMap.get(name);
-
         if (loadout == null) {
             loadout = new Loadout();
             loadoutMap.put(name, loadout);
@@ -89,22 +84,17 @@ public class FloorGuiMenuListener implements Listener {
         ClickType clickType = event.getClick();
         int maxPoints = (arena.getBooster().isActive() ? 10 : 5);
         int change;
-
-        if (clickType.equals(ClickType.LEFT) || clickType.equals(ClickType.DOUBLE_CLICK)) {
+        if (clickType.equals(ClickType.LEFT) || clickType.equals(ClickType.DOUBLE_CLICK))
             change = 1;
-        } else {
+        else
             change = -1;
-        }
-
         if (change == 1 && loadout.countSum() == maxPoints) {
-            if (clickedItem != null && clickedItem.getType() != Material.AIR) {
+            if (clickedItem.getType() != Material.AIR)
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-            }
             return;
         } else if (change == -1 && loadout.countSum() == 0) {
-            if (clickedItem != null && clickedItem.getType() != Material.AIR) {
+            if (clickedItem.getType() != Material.AIR)
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-            }
             return;
         }
 
@@ -168,39 +158,30 @@ public class FloorGuiMenuListener implements Listener {
     }
 
     private boolean matchesItemStack(ItemStack original, ItemStack input) {
-        if (original == null || input == null) {
+        if (original == null || input == null)
             return false;
-        }
 
         if (input.getType() == original.getType()) {
-            boolean originalHasMeta = original.hasItemMeta();
-            boolean inputHasMeta = input.hasItemMeta();
-
-            if (originalHasMeta && inputHasMeta) {
-                ItemMeta originalMeta = original.getItemMeta();
-                ItemMeta inputMeta = input.getItemMeta();
-
-                if (originalMeta.hasDisplayName() && inputMeta.hasDisplayName()) {
+            ItemMeta originalMeta = original.getItemMeta();
+            ItemMeta inputMeta = input.getItemMeta();
+            if (originalMeta != null && inputMeta != null) {
+                if (originalMeta.hasDisplayName() && inputMeta.hasDisplayName())
                     return originalMeta.getDisplayName().equals(inputMeta.getDisplayName());
-                }
             } else {
-                return originalHasMeta == inputHasMeta;
+                return (originalMeta != null) == (inputMeta != null);
             }
         }
-
         return false;
     }
 
     private void playSoundOnCondition(Player player, boolean flag) {
-        if (flag) {
+        if (flag)
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
-        } else {
+        else
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-        }
     }
 
-    private void updateItemStackAmount(Inventory inventory, ItemStack itemStack,
-                                       int slot, int amount) {
+    private void updateItemStackAmount(Inventory inventory, ItemStack itemStack, int slot, int amount) {
         ItemStack cloned = itemStack.clone();
         cloned.setAmount(amount);
         inventory.setItem(slot, cloned);

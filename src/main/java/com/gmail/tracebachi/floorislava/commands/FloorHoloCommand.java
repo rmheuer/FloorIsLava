@@ -42,25 +42,30 @@ public class FloorHoloCommand implements CommandExecutor {
             sender.sendMessage(BAD + "You do not have access to this command!");
             return true;
         }
-
         if (!(sender instanceof Player)) {
             sender.sendMessage(BAD + "This command can only be used by players.");
             return true;
         }
-
         Player player = (Player) sender;
-
         if (args.length == 0) {
             player.sendMessage(BAD + "/floorholo [place, remove, reset]");
             return true;
         }
-
         if (args[0].equalsIgnoreCase("place")) {
             floorLeaderboard.addNewLeaderboard(player.getLocation());
             player.sendMessage(GOOD + "Leaderboard placed.");
         } else if (args[0].equalsIgnoreCase("remove")) {
-            if (args.length >= 2 && parseInt(args[1]) != null) {
-                int index = parseInt(args[1]);
+            if (args.length >= 2) {
+                int index;
+                try {
+                    index = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    index =-1;
+                }
+                if (index == -1) {
+                    player.sendMessage(BAD + args[0] + " is an invalid amount.");
+                    return true;
+                }
                 floorLeaderboard.removeLeaderboard(index);
                 player.sendMessage(GOOD + "Leaderboard removed.");
             } else {
@@ -72,15 +77,6 @@ public class FloorHoloCommand implements CommandExecutor {
         } else {
             player.sendMessage(BAD + "/floorholo [place, remove, reset]");
         }
-
         return true;
-    }
-
-    private Integer parseInt(String src) {
-        try {
-            return Integer.parseInt(src);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }

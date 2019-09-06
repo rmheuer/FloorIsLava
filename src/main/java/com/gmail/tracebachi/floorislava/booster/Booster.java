@@ -51,21 +51,17 @@ public class Booster {
         this.boosterType = boosterType;
         this.timeActivated = System.currentTimeMillis();
         this.active = true;
-        this.task = Bukkit.getScheduler().runTaskTimer(plugin, () ->
-        {
+        this.task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             long boosterTypeTime = boosterType.getTime();
-
             if (boosterTypeTime > 0 && boosterTypeTime < System.currentTimeMillis() - timeActivated) {
                 stop();
                 return;
             }
-
             String message = ChatColor.translateAlternateColorCodes('&',
                     GOOD + owner + "&7's &f" + boosterType.getName() +
                             " &7booster is active." + " Loadout points are increased to 10" +
                             ", money, and wintatoes earned are doubled.");
             broadcast(message, false);
-
             String formattedTimeLeft = getFormattedTimeLeft();
             String timeLeftMessage = ChatColor.translateAlternateColorCodes('&',
                     GOOD + "&7Time remaining for &a" + owner + "&7's Booster: " + formattedTimeLeft);
@@ -85,39 +81,32 @@ public class Booster {
         String message = ChatColor.translateAlternateColorCodes('&',
                 GOOD + owner + "&7's &f" + boosterType.getName() + " &7booster is now over!");
         broadcast(message, true);
-
         arena.getLoadoutMap().clear();
-
         active = false;
         owner = "Potato";
         timeActivated = 0;
         boosterType = BoosterType.NONE;
-
         task.cancel();
         task = null;
     }
 
-    private String getFormattedTimeLeft() {
+    private String getFormattedTimeLeft() { //TODO maybe it can be improved
         long timeLeft = timeActivated + boosterType.getTime() - System.currentTimeMillis();
         int hours = 0;
         int minutes = 0;
         int seconds = 0;
-
         while (timeLeft >= 3600000) {
             hours++;
             timeLeft -= 3600000;
         }
-
         while (timeLeft >= 60000) {
             minutes++;
             timeLeft -= 60000;
         }
-
         while (timeLeft >= 1000) {
             seconds++;
             timeLeft -= 1000;
         }
-
         return hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
@@ -181,15 +170,11 @@ public class Booster {
         World world = Bukkit.getWorld(arena.getWorldName());
         Location locationInside = arena.getWatchCuboidArea().getRandomLocationInside(world);
         int boosterBroadcastRange = arena.getBoosterBroadcastRange();
-
         for (Player target : Bukkit.getOnlinePlayers()) {
             if (target != null) {
                 Location location = target.getLocation();
-
-                if (!global && location.distance(locationInside) > boosterBroadcastRange) {
+                if (!global && location.distance(locationInside) > boosterBroadcastRange)
                     continue;
-                }
-
                 target.sendMessage(message);
             }
         }

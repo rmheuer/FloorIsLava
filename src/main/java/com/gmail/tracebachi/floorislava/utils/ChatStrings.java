@@ -21,7 +21,7 @@ import org.bukkit.ChatColor;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 8/25/16.
  */
-public interface ChatStrings {
+public interface ChatStrings { //TODO this needs to be done in a better way :v
 
     String GOOD = ChatColor.translateAlternateColorCodes('&', "&8[&aFIL&8]&a ");
     String BAD = ChatColor.translateAlternateColorCodes('&', "&8[&cFIL&8]&c ");

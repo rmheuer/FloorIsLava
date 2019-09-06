@@ -42,20 +42,16 @@ public class FloorBoosterCommand implements CommandExecutor {
             sender.sendMessage(BAD + "You do not have access to this command!");
             return true;
         }
-
         if (args.length == 0) {
             sender.sendMessage(BAD + "/floorbooster [start, stop]");
             return true;
         }
-
         Booster booster = arena.getBooster();
-
         if (args[0].equalsIgnoreCase("stop")) {
             if (!booster.isActive()) {
                 sender.sendMessage(BAD + "A Booster is not active.");
                 return true;
             }
-
             booster.stop();
         } else if (args[0].equalsIgnoreCase("start")) {
             if (booster.isActive()) {
@@ -63,15 +59,11 @@ public class FloorBoosterCommand implements CommandExecutor {
                         + "To start another one, first type: /floorbooster stop");
                 return true;
             }
-
             String owner = "Console";
-
             if (sender instanceof Player) {
                 owner = sender.getName();
             }
-
             Booster.BoosterType type = Booster.BoosterType.PERMANENT;
-
             if (args.length >= 2) {
                 String requestedType = args[1];
                 Booster.BoosterType newType = Booster.BoosterType.match(requestedType);
@@ -80,15 +72,12 @@ public class FloorBoosterCommand implements CommandExecutor {
                     sender.sendMessage(BAD + "/floorbooster start [1h, 2h, 4h]");
                     return true;
                 }
-
                 type = newType;
             }
-
             booster.start(owner, type);
         } else {
             sender.sendMessage(BAD + "/floorbooster [start, stop]");
         }
-
         return true;
     }
 }

@@ -83,6 +83,7 @@ public class CuboidArea {
                 world,
                 lower.x() + 1 + RANDOM.nextInt(upper.x() - lower.x() - 1) + 0.5,
                 upper.y() - 1,
-                lower.z() + 1 + RANDOM.nextInt(upper.z() - lower.z() - 1) + 0.5);
+                lower.z() + 1 + RANDOM.nextInt(upper.z() - lower.z() - 1) + 0.5
+        );
     }
 }

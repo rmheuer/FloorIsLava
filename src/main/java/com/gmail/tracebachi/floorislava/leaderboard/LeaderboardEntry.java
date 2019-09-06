@@ -43,12 +43,6 @@ public class LeaderboardEntry implements Comparable<LeaderboardEntry> {
 
     @Override
     public int compareTo(LeaderboardEntry o) {
-        if (score > o.score) {
-            return 1;
-        } else if (score < o.score) {
-            return -1;
-        } else {
-            return 0;
-        }
+        return Integer.compare(score, o.score);
     }
 }

@@ -43,7 +43,6 @@ public class ArenaBlocks {
     public void save(World world) {
         Point lower = cuboidArea.getLower();
         Point upper = cuboidArea.getUpper();
-
         for (int i = lower.x(); i <= upper.x(); ++i) {
             for (int j = lower.y(); j <= upper.y(); ++j) {
                 for (int k = lower.z(); k <= upper.z(); ++k) {
@@ -54,21 +53,17 @@ public class ArenaBlocks {
     }
 
     public void restore() {
-        for (BlockState state : blockStates) {
+        for (BlockState state : blockStates)
             state.update(true);
-        }
-
         blockStates.clear();
     }
 
     public void degradeBlocks(World world, int amount) {
         Point lower = cuboidArea.getLower();
         Point upper = cuboidArea.getUpper();
-
         for (int i = lower.x(); i <= upper.x(); ++i) {
             for (int j = lower.z(); j <= upper.z(); ++j) {
-                if (i == (lower.x() + amount) || i == (upper.x() - amount) ||
-                        j == (lower.z() + amount) || j == (upper.z() - amount)) {
+                if (i == (lower.x() + amount) || i == (upper.x() - amount) || j == (lower.z() + amount) || j == (upper.z() - amount)) {
                     for (int k = lower.y(); k <= upper.y(); ++k) {
                         world.getBlockAt(i, k, j).setType(Material.AIR);
                     }

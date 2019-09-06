@@ -19,17 +19,19 @@ package com.gmail.tracebachi.floorislava.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * Created by Jeremy Lugo on 8/17/2016.
  */
-public class FireworkSpark {
+public class FireworkSpark { //TODO maybe I find out how to make this not require reflections
 
     private static final Class<?> entityFireworks = getClass(
             "net.minecraft.server.",
@@ -39,16 +41,17 @@ public class FireworkSpark {
             "entity.CraftFirework");
 
     public static void spark(FireworkEffect effect, Location location) {
-        Firework firework = location.getWorld().spawn(location, Firework.class);
+        Firework firework = Objects.requireNonNull(location.getWorld(), "The world is null somehow.")
+                .spawn(location, Firework.class);
         FireworkMeta meta = firework.getFireworkMeta();
         meta.addEffect(effect);
         firework.setFireworkMeta(meta);
 
         try {
-            Object fireworkObject = craftFirework.cast(firework);
+            Object fireworkObject = Objects.requireNonNull(craftFirework).cast(firework);
             Method handle = fireworkObject.getClass().getMethod("getHandle");
             Object entityFirework = handle.invoke(fireworkObject);
-            Field expectedLifespan = entityFireworks.getDeclaredField("expectedLifespan");
+            Field expectedLifespan = Objects.requireNonNull(entityFireworks).getDeclaredField("expectedLifespan");
             Field ticksFlown = entityFireworks.getDeclaredField("ticksFlown");
             ticksFlown.setAccessible(true);
             ticksFlown.setInt(entityFirework, expectedLifespan.getInt(entityFirework) - 1);
@@ -62,13 +65,11 @@ public class FireworkSpark {
 
     private static Class<?> getClass(String prefix, String nmsClassString) {
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + ".";
-
         try {
             return Class.forName(prefix + version + nmsClassString);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }

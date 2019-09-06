@@ -29,7 +29,7 @@ public class Loadout {
 
     public static final ItemStack TNT_ITEM = new ItemStack(Material.TNT);
     public static final ItemStack HOOK_ITEM = new ItemStack(Material.TRIPWIRE_HOOK);
-    public static final ItemStack WEB_ITEM = new ItemStack(Material.WEB);
+    public static final ItemStack WEB_ITEM = new ItemStack(Material.COBWEB);
     public static final ItemStack INVIS_ITEM = new ItemStack(Material.BLAZE_ROD);
     public static final ItemStack BOOST_ITEM = new ItemStack(Material.FEATHER);
     public static final ItemStack CHIKUN_ITEM = new ItemStack(Material.EGG);
@@ -37,32 +37,46 @@ public class Loadout {
 
     static {
         ItemMeta tntMeta = TNT_ITEM.getItemMeta();
+        if (tntMeta == null)
+            throw new NullPointerException("The tnt item meta is null for some reasons.");
         tntMeta.setDisplayName(DARK_RED + "\u2622"
                 + GOLD + " Throwing TNT "
                 + DARK_RED + "\u2622");
         TNT_ITEM.setItemMeta(tntMeta);
 
         ItemMeta hookMeta = HOOK_ITEM.getItemMeta();
+        if (hookMeta == null)
+            throw new NullPointerException("The hook item meta is null for some reasons.");
         hookMeta.setDisplayName(AQUA + "Player Launcher");
         HOOK_ITEM.setItemMeta(hookMeta);
 
-        ItemMeta dewebMeta = WEB_ITEM.getItemMeta();
-        dewebMeta.setDisplayName(GREEN + "Webber");
-        WEB_ITEM.setItemMeta(dewebMeta);
+        ItemMeta webMeta = WEB_ITEM.getItemMeta();
+        if (webMeta == null)
+            throw new NullPointerException("The web item meta is null for some reasons.");
+        webMeta.setDisplayName(GREEN + "Webber");
+        WEB_ITEM.setItemMeta(webMeta);
 
         ItemMeta invisMeta = INVIS_ITEM.getItemMeta();
+        if (invisMeta == null)
+            throw new NullPointerException("The invis item meta is null for some reasons.");
         invisMeta.setDisplayName(GRAY + "Rod of Invisibility");
         INVIS_ITEM.setItemMeta(invisMeta);
 
         ItemMeta boostMeta = BOOST_ITEM.getItemMeta();
+        if (boostMeta == null)
+            throw new NullPointerException("The boost item meta is null for some reasons.");
         boostMeta.setDisplayName(YELLOW + "Boost");
         BOOST_ITEM.setItemMeta(boostMeta);
 
         ItemMeta chikunMeta = CHIKUN_ITEM.getItemMeta();
+        if (chikunMeta == null)
+            throw new NullPointerException("The chikun item meta is null for some reasons.");
         chikunMeta.setDisplayName(LIGHT_PURPLE + "Chikun Bomb");
         CHIKUN_ITEM.setItemMeta(chikunMeta);
 
         ItemMeta stealMeta = STEAL_ITEM.getItemMeta();
+        if (stealMeta == null)
+            throw new NullPointerException("The steal item meta is null for some reasons.");
         stealMeta.setDisplayName(BLUE + "Steal");
         STEAL_ITEM.setItemMeta(stealMeta);
     }

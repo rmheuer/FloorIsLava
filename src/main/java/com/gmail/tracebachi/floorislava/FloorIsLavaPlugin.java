@@ -28,6 +28,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
@@ -43,27 +44,23 @@ public class FloorIsLavaPlugin extends JavaPlugin {
     public void onLoad() {
         instance = this;
         File config = new File(getDataFolder(), "config.yml");
-        if (!config.exists()) {
+        if (!config.exists())
             saveDefaultConfig();
-        }
     }
 
     @Override
     public void onEnable() {
         reloadConfig();
 
-        /*********************************************************************/
         RegisteredServiceProvider<Economy> economyProvider = getServer()
                 .getServicesManager()
                 .getRegistration(net.milkbowl.vault.economy.Economy.class);
-
         if (economyProvider == null) {
             getLogger().severe("Economy provider not found! FloorIsLava will not be enabled.");
             return;
         } else {
             economy = economyProvider.getProvider();
         }
-        /*********************************************************************/
 
         arena = new Arena(this);
         arena.loadConfig(getConfig());
@@ -71,23 +68,26 @@ public class FloorIsLavaPlugin extends JavaPlugin {
         listener = new FloorGuiMenuListener(arena);
         getServer().getPluginManager().registerEvents(listener, this);
 
-        getCommand("floor").setExecutor(new FloorCommand(arena));
-        getCommand("floorbooster").setExecutor(new FloorBoosterCommand(arena));
-        getCommand("floorholo").setExecutor(new FloorHoloCommand(arena.getFloorLeaderboard()));
-        getCommand("mfloor").setExecutor(new ManageFloorCommand(this, arena));
+        Objects.requireNonNull(getCommand("floor"), "floor command not found.")
+                .setExecutor(new FloorCommand(arena));
+        Objects.requireNonNull(getCommand("floorbooster"), "floorbooster command not found.")
+                .setExecutor(new FloorBoosterCommand(arena));
+        Objects.requireNonNull(getCommand("floorholo"), "floorholo command not found.")
+                .setExecutor(new FloorHoloCommand(arena.getFloorLeaderboard()));
+        Objects.requireNonNull(getCommand("mfloor"), "mfloor command not found.")
+                .setExecutor(new ManageFloorCommand(this, arena));
     }
 
     @Override
     public void onDisable() {
+        /*
         getCommand("mfloor").setExecutor(null);
         getCommand("floorbooster").setExecutor(null);
         getCommand("floorholo").setExecutor(null);
         getCommand("floor").setExecutor(null);
-
+         */
         listener = null;
-
         arena.forceStop(Bukkit.getConsoleSender(), false);
-
         arena.getFloorLeaderboard().save();
         arena.getFloorLeaderboard().clear();
     }

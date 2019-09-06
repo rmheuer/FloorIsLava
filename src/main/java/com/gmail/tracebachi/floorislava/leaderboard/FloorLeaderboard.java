@@ -68,18 +68,16 @@ public class FloorLeaderboard {
     }
 
     public int getScore(String name) {
-        if (entries.containsKey(name)) {
+        if (entries.containsKey(name))
             return entries.get(name).getScore();
-        } else {
+        else
             return 0;
-        }
     }
 
     public void addNewLeaderboard(Location location) {
         Hologram hologram = spawnHolo(location);
         setupHolo(hologram);
         holograms.add(hologram);
-
         save();
     }
 
@@ -116,9 +114,8 @@ public class FloorLeaderboard {
     }
 
     public void clear() {
-        for (Hologram hologram : holograms) {
+        for (Hologram hologram : holograms)
             clearHolo(hologram);
-        }
     }
 
     public void resetScores() {
@@ -130,9 +127,8 @@ public class FloorLeaderboard {
 
     private void loadEntries() {
         ConfigurationSection section = config.getConfigurationSection("Entries");
-        if (section == null) {
+        if (section == null)
             return;
-        }
         for (String entry : section.getKeys(false)) {
             String name = section.getString(entry + ".Name");
             int score = section.getInt(entry + ".Score");
@@ -141,9 +137,11 @@ public class FloorLeaderboard {
     }
 
     private void loadLocations() {
-        List<Location> locations = (List<Location>) config.getList("Locations");
-        for (Location location : locations) {
-            addNewLeaderboard(location);
+        List<?> locations = config.getList("Locations");
+        if (locations == null)
+            return;
+        for (Object location : locations) {
+            addNewLeaderboard((Location) location);
         }
     }
 
@@ -172,8 +170,7 @@ public class FloorLeaderboard {
     private void setupHolo(Hologram hologram) {
         hologram.appendTextLine(translate(config.getString("LeaderboardTitle")));
         List<LeaderboardEntry> leaderboardEntries = new ArrayList<>(entries.values());
-        EntrySorter.sortList(leaderboardEntries, Comparator.reverseOrder(), () ->
-        {
+        EntrySorter.sortList(leaderboardEntries, Comparator.reverseOrder(), () -> {
             for (int i = 0; i < leaderboardEntries.size() && i < maxEntries; i++) {
                 LeaderboardEntry entry = leaderboardEntries.get(i);
                 String color = "&" + (i == 0 ? "e" : i == 1 ? "7" : i == 2 ? "6" : "f");

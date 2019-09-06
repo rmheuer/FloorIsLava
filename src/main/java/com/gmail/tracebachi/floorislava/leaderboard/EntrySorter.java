@@ -17,9 +17,8 @@ public class EntrySorter {
         void sorted();
     }
 
-    public static void sortList(List<LeaderboardEntry> list, Comparator comparator, Callback callback) {
-        executeAsync(() ->
-        {
+    public static void sortList(List<LeaderboardEntry> list, Comparator<? super LeaderboardEntry> comparator, Callback callback) {
+        executeAsync(() -> {
             list.sort(comparator);
             executeSync(callback::sorted);
         });

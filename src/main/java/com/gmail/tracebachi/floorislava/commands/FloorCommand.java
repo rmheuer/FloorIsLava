@@ -43,21 +43,21 @@ public class FloorCommand implements CommandExecutor {
             sender.sendMessage(BAD + "This command can only be used by players.");
             return true;
         }
-
         Player player = (Player) sender;
-
         if (args.length >= 2 && args[0].startsWith("w")) { // W = wager
-            Integer amount = parseInt(args[1]);
-
-            if (amount == null || amount <= 0) {
+            int amount;
+            try {
+               amount = Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                amount = -1;
+            }
+            if (amount <= 0) {
                 player.sendMessage(BAD + args[0] + " is an invalid amount.");
                 return true;
             }
-
             arena.wager(amount, player);
         } else if (args.length >= 1 && args[0].startsWith("c")) { // C = count
             String status = arena.hasStarted() ? "started." : "waiting.";
-
             player.sendMessage(GOOD + "There are " +
                     arena.getPlayingSize() + " players " + status);
             player.sendMessage(GOOD + "Wager: $" +
@@ -68,15 +68,6 @@ public class FloorCommand implements CommandExecutor {
             FloorGuiMenu menu = new FloorGuiMenu(arena);
             menu.showTo(player);
         }
-
         return true;
-    }
-
-    private Integer parseInt(String src) {
-        try {
-            return Integer.parseInt(src);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }
