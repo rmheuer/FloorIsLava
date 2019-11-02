@@ -47,7 +47,6 @@ public class FloorGuiMenuListener implements Listener {
         Inventory inventory = event.getInventory();
         ItemStack clickedItem = event.getCurrentItem();
 
-        // check if one of our items was selected
         if (!event.getView().getTitle().equals("Floor Is Lava Menu"))
             return;
         if (clickedItem == null)
@@ -56,14 +55,14 @@ public class FloorGuiMenuListener implements Listener {
         event.setCancelled(true);
         Map<String, Loadout> loadoutMap = arena.getLoadoutMap();
         Player player = (Player) event.getWhoClicked();
-        String playerName = player.getName();
-        Loadout loadout = loadoutMap.get(playerName);
+        String name = player.getName();
+        Loadout loadout = loadoutMap.get(name);
         if (loadout == null) {
             loadout = new Loadout();
-            loadoutMap.put(playerName, loadout);
+            loadoutMap.put(name, loadout);
         }
 
-        // if one of the menu items was selected, do its stuff and close the inventory
+        /* Menu Items */
         if (matchesItemStack(FloorGuiMenu.JOIN_ITEM, clickedItem)) {
             player.closeInventory();
             arena.join(player);
@@ -99,7 +98,6 @@ public class FloorGuiMenuListener implements Listener {
             return;
         }
 
-        //TODO items are removed if displayed as 0, but how are we gonna display actual 0 items selected?
         if (matchesItemStack(FloorGuiMenu.TNT_ITEM, clickedItem)) {
             int oldCount = loadout.tnt;
             loadout.tnt = Math.max(0, loadout.tnt + change);

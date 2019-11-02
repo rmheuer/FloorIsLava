@@ -406,14 +406,11 @@ public class Arena implements Listener {
                     Loadout.STEAL_ITEM.clone(),
                     Loadout.WEB_ITEM.clone(),
                     Loadout.TNT_ITEM.clone()};
-            int i, choice, itemIndex;
+            int i, choice;
             ItemStack item;
             for (i = 0; i < chestItemAmount; i++) {
                 choice = random.nextInt(newItems.length);
-                itemIndex = inventory.first(newItems[choice].getType());
-                if (itemIndex == -1)
-                    return; //TODO maybe something else?
-                item = inventory.getItem(itemIndex);
+                item = inventory.getItem(inventory.first(newItems[choice].getType()));
                 if (item != null)
                     item.setAmount(item.getAmount() + 1);
                 else
@@ -429,29 +426,8 @@ public class Arena implements Listener {
         ItemStack heldItem = event.getItem();
         Block clickedBlock = event.getClickedBlock();
 
-        ItemUseDelay itemUseDelay = delayMap.get(playerName);
-        if (itemUseDelay == null) {
-            itemUseDelay = new ItemUseDelay();
-            delayMap.put(playerName, itemUseDelay);
-        }
-
-        if (clickedBlock == null) { //TODO code below duplicated lower in the method
-            if (event.getAction() == Action.RIGHT_CLICK_AIR && heldItem != null && heldItem.getType().equals(Material.TNT)) {
-                long endTime = itemUseDelay.tnt;
-                if (System.currentTimeMillis() > endTime) {
-                    decrementAmountOfItemStack(player.getInventory(), heldItem);
-                    Location location = player.getLocation();
-                    TNTPrimed tnt = player.getWorld().spawn(location.add(0, 1, 0), TNTPrimed.class);
-                    tnt.setMetadata("FIL", new FixedMetadataValue(plugin, "FIL"));
-                    Vector vector = player.getLocation().getDirection();
-                    vector.add(new Vector(0.0, 0.15, 0.0));
-                    tnt.setVelocity(vector);
-                    itemUseDelay.tnt = System.currentTimeMillis() + tntUseDelay;
-                } else
-                    player.sendMessage(BAD + "You cannot place TNT yet.");
-            }
+        if (clickedBlock == null)
             return;
-        }
         if (!started || !playing.containsKey(playerName)) {
             return;
         }
@@ -468,6 +444,11 @@ public class Arena implements Listener {
 
         World world = player.getWorld();
         Inventory inventory = player.getInventory();
+        ItemUseDelay itemUseDelay = delayMap.get(playerName);
+        if (itemUseDelay == null) {
+            itemUseDelay = new ItemUseDelay();
+            delayMap.put(playerName, itemUseDelay);
+        }
 
         //TODO maybe I can make an actual Powerup class and implement an abstract method for each powerup
         if (heldItem.getType().equals(Material.TNT)) {
@@ -478,7 +459,7 @@ public class Arena implements Listener {
                     Location location = clickedBlock.getLocation();
                     TNTPrimed tnt = world.spawn(location.add(0, 1, 0), TNTPrimed.class);
                     tnt.setMetadata("FIL", new FixedMetadataValue(plugin, "FIL"));
-                } else if (event.getAction() == Action.RIGHT_CLICK_AIR) { //TODO probably remove
+                } else if (event.getAction() == Action.RIGHT_CLICK_AIR) {
                     Location location = player.getLocation();
                     TNTPrimed tnt = world.spawn(location.add(0, 1, 0), TNTPrimed.class);
                     tnt.setMetadata("FIL", new FixedMetadataValue(plugin, "FIL"));
