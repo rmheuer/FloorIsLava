@@ -410,11 +410,13 @@ public class Arena implements Listener {
             ItemStack item;
             for (i = 0; i < chestItemAmount; i++) {
                 choice = random.nextInt(newItems.length);
-                item = inventory.getItem(inventory.first(newItems[choice].getType()));
-                if (item != null)
-                    item.setAmount(item.getAmount() + 1);
-                else
+                itemIndex = inventory.first(newItems[choice].getType());
+                if (itemIndex == -1)
                     inventory.addItem(newItems[choice]);
+                else {
+                    item = inventory.getItem(itemIndex);
+                    item.setAmount(item.getAmount() + 1);
+                }
             }
         }
     }
