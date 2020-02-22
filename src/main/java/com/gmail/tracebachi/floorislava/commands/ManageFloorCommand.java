@@ -22,8 +22,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import static com.gmail.tracebachi.floorislava.utils.ChatStrings.BAD;
-import static com.gmail.tracebachi.floorislava.utils.ChatStrings.GOOD;
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.

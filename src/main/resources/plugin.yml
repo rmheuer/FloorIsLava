@@ -1,5 +1,5 @@
 name: FloorIsLava
-main: com.gmail.tracebachi.FloorIsLava.FloorIsLavaPlugin
+main: com.gmail.tracebachi.floorislava.FloorIsLavaPlugin
 version: ${project.version}
 authors: [Trace Bachi (BigBossZee), Jeremy Lugo (Refrigerbater)]
 depend: [Vault, HolographicDisplays]

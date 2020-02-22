@@ -20,12 +20,14 @@ import com.gmail.tracebachi.floorislava.arena.Arena;
 import com.gmail.tracebachi.floorislava.utils.Loadout;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -102,8 +104,8 @@ public class FloorGuiMenuListener implements Listener {
             int oldCount = loadout.tnt;
             loadout.tnt = Math.max(0, loadout.tnt + change);
             playSoundOnCondition(player, loadout.tnt != oldCount);
-
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.TNT_ITEM, 19, loadout.tnt);
         } else if (matchesItemStack(FloorGuiMenu.HOOK_ITEM, clickedItem)) {
@@ -112,6 +114,7 @@ public class FloorGuiMenuListener implements Listener {
             playSoundOnCondition(player, loadout.hook != oldCount);
 
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.HOOK_ITEM, 20, loadout.hook);
         } else if (matchesItemStack(FloorGuiMenu.WEB_ITEM, clickedItem)) {
@@ -120,6 +123,7 @@ public class FloorGuiMenuListener implements Listener {
             playSoundOnCondition(player, loadout.web != oldCount);
 
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.WEB_ITEM, 21, loadout.web);
         } else if (matchesItemStack(FloorGuiMenu.INVIS_ITEM, clickedItem)) {
@@ -128,6 +132,7 @@ public class FloorGuiMenuListener implements Listener {
             playSoundOnCondition(player, loadout.invis != oldCount);
 
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.INVIS_ITEM, 22, loadout.invis);
         } else if (matchesItemStack(FloorGuiMenu.BOOST_ITEM, clickedItem)) {
@@ -136,6 +141,7 @@ public class FloorGuiMenuListener implements Listener {
             playSoundOnCondition(player, loadout.boost != oldCount);
 
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.BOOST_ITEM, 23, loadout.boost);
         } else if (matchesItemStack(FloorGuiMenu.CHIKUN_ITEM, clickedItem)) {
@@ -144,6 +150,7 @@ public class FloorGuiMenuListener implements Listener {
             playSoundOnCondition(player, loadout.chikun != oldCount);
 
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.CHIKUN_ITEM, 24, loadout.chikun);
         } else if (matchesItemStack(FloorGuiMenu.STEAL_ITEM, clickedItem)) {
@@ -152,6 +159,7 @@ public class FloorGuiMenuListener implements Listener {
             playSoundOnCondition(player, loadout.steal != oldCount);
 
             int pointsAmount = maxPoints - loadout.countSum();
+            if (pointsAmount == 0) pointsAmount = 1;
             updateItemStackAmount(inventory, FloorGuiMenu.POINTS_ITEM, 13, pointsAmount);
             updateItemStackAmount(inventory, FloorGuiMenu.STEAL_ITEM, 25, loadout.steal);
         }
@@ -183,6 +191,17 @@ public class FloorGuiMenuListener implements Listener {
 
     private void updateItemStackAmount(Inventory inventory, ItemStack itemStack, int slot, int amount) {
         ItemStack cloned = itemStack.clone();
+        if (amount == 0) {
+            cloned.removeEnchantment(Enchantment.DURABILITY);
+            ++amount; // this is because setting amounts to 0 removes the item
+        }
+
+        else cloned.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        ItemMeta meta = cloned.getItemMeta();
+        if (meta == null)
+            throw new NullPointerException("ItemMeta for an updated item stack was null, which makes no sense?"); // because warnings
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        cloned.setItemMeta(meta); // I wish I could one-line this, stupid ItemMeta
         cloned.setAmount(amount);
         inventory.setItem(slot, cloned);
     }

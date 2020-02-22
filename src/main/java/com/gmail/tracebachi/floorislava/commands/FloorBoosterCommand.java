@@ -23,7 +23,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static com.gmail.tracebachi.floorislava.utils.ChatStrings.BAD;
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.

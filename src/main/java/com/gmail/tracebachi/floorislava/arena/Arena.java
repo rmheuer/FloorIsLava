@@ -48,8 +48,8 @@ import org.bukkit.util.Vector;
 import java.io.File;
 import java.util.*;
 
-import static com.gmail.tracebachi.floorislava.utils.ChatStrings.BAD;
-import static com.gmail.tracebachi.floorislava.utils.ChatStrings.GOOD;
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 /**
  * Created by Trace Bachi (BigBossZee) on 8/20/2015.
@@ -406,7 +406,7 @@ public class Arena implements Listener {
                     Loadout.STEAL_ITEM.clone(),
                     Loadout.WEB_ITEM.clone(),
                     Loadout.TNT_ITEM.clone()};
-            int i, choice;
+            int i, choice, itemIndex;
             ItemStack item;
             for (i = 0; i < chestItemAmount; i++) {
                 choice = random.nextInt(newItems.length);
@@ -427,14 +427,11 @@ public class Arena implements Listener {
         String playerName = player.getName();
         ItemStack heldItem = event.getItem();
         Block clickedBlock = event.getClickedBlock();
-
-        if (clickedBlock == null)
-            return;
         if (!started || !playing.containsKey(playerName)) {
             return;
         }
         event.setCancelled(true);
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK && clickedBlock != null) {
             Location clicked = clickedBlock.getLocation();
             if (arenaBlocks.getCuboidArea().isInside(clicked)) {
                 clickedBlock.setType(Material.AIR);

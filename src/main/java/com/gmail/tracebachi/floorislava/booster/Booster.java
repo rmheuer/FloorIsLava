@@ -25,7 +25,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import static com.gmail.tracebachi.floorislava.utils.ChatStrings.GOOD;
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 /**
  * Created by Jeremy Lugo (Refrigerbater) on 6/12/2016.
