@@ -16,16 +16,33 @@
  */
 package com.gmail.tracebachi.floorislava.utils;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 8/26/16.
  */
 public class ItemUseDelay {
+    private Map<String, Long> delays;
 
-    public long tnt = 0;
-    public long hook = 0;
-    public long web = 0;
-    public long invis = 0;
-    public long boost = 0;
-    public long chikun = 0;
-    public long steal = 0;
+    public ItemUseDelay(FileConfiguration config) {
+        this.delays = new HashMap<>();
+        this.set("tnt", config.getInt("ItemUseDelays.ThrowingTNT"));
+        this.set("hook", config.getInt("ItemUseDelays.PlayerLauncher"));
+        this.set("web", config.getInt("ItemUseDelays.Webber"));
+        this.set("invis", config.getInt("ItemUseDelays.RodOfInvisibility"));
+        this.set("boost", config.getInt("ItemUseDelays.Boost"));
+        this.set("chikun", config.getInt("ItemUseDelays.Chikun"));
+        this.set("steal", config.getInt("ItemUseDelays.Steal"));
+    }
+
+    public long valueOf(String name) {
+        return delays.get(name);
+    }
+
+    private void set(String name, long delay) {
+        this.delays.put(name, delay);
+    }
 }

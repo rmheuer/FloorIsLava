@@ -16,6 +16,8 @@
  */
 package com.gmail.tracebachi.floorislava.arena;
 
+import com.gmail.tracebachi.floorislava.arena.perks.Perk;
+import com.gmail.tracebachi.floorislava.arena.perks.PerkHandler;
 import com.gmail.tracebachi.floorislava.booster.Booster;
 import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
 import com.gmail.tracebachi.floorislava.leaderboard.FloorLeaderboard;
@@ -40,10 +42,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.*;
@@ -56,18 +56,16 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
  */
 public class Arena implements Listener {
 
-    private FloorIsLavaPlugin plugin;
-    private Booster booster;
-    private FloorLeaderboard floorLeaderboard;
-    private Random random = new Random();
+    private final FloorIsLavaPlugin plugin;
+    private final Booster booster;
+    private final FloorLeaderboard floorLeaderboard;
 
-    private ItemStack winPrize;
-    private ItemStack losePrize;
+    private final ItemStack winPrize;
+    private final ItemStack losePrize;
 
-    private Map<String, PlayerState> playing = new HashMap<>();
-    private Map<String, Loadout> loadoutMap = new HashMap<>();
-    private Map<String, ItemUseDelay> delayMap = new HashMap<>();
-    private Set<String> watching = new HashSet<>();
+    private final Map<String, PlayerState> playing = new HashMap<>();
+    private final Map<String, Loadout> loadoutMap = new HashMap<>();
+    private final Set<String> watching = new HashSet<>();
 
     private boolean started = false;
     private boolean enabled = true;
@@ -89,18 +87,10 @@ public class Arena implements Listener {
     private int ticksPerCheck;
     private int startDegradeOn;
     private int degradeOn;
-    private int tntUseDelay;
-    private int hookUseDelay;
-    private int deWebUseDelay;
-    private int invisUseDelay;
-    private int boostUseDelay;
-    private int chikunUseDelay;
-    private int stealUseDelay;
     private int boosterBroadcastRange;
     private CuboidArea arenaCuboidArea;
     private CuboidArea watchCuboidArea;
-
-    private int chestItemAmount = 2;
+    private PerkHandler perkHandler;
 
     public Arena(FloorIsLavaPlugin plugin) {
         this.plugin = plugin;
@@ -255,10 +245,6 @@ public class Arena implements Listener {
         return worldName;
     }
 
-    public CuboidArea getArenaCuboidArea() {
-        return arenaCuboidArea;
-    }
-
     public CuboidArea getWatchCuboidArea() {
         return watchCuboidArea;
     }
@@ -292,13 +278,7 @@ public class Arena implements Listener {
         startDegradeOn = config.getInt("StartDegradeOn");
         degradeOn = config.getInt("DegradeOnTick");
 
-        tntUseDelay = config.getInt("ItemUseDelays.ThrowingTNT");
-        hookUseDelay = config.getInt("ItemUseDelays.PlayerLauncher");
-        deWebUseDelay = config.getInt("ItemUseDelays.Webber");
-        invisUseDelay = config.getInt("ItemUseDelays.RodOfInvisibility");
-        boostUseDelay = config.getInt("ItemUseDelays.Boost");
-        chikunUseDelay = config.getInt("ItemUseDelays.Chikun");
-        stealUseDelay = config.getInt("ItemUseDelays.Steal");
+        perkHandler = new PerkHandler(config, this.arenaCuboidArea, plugin);
 
         arenaCuboidArea = new CuboidArea(
                 config.getConfigurationSection("ArenaArea.One"),
@@ -408,6 +388,7 @@ public class Arena implements Listener {
                     Loadout.TNT_ITEM.clone()};
             int i, choice, itemIndex;
             ItemStack item;
+            int chestItemAmount = 2;
             for (i = 0; i < chestItemAmount; i++) {
                 choice = random.nextInt(newItems.length);
                 itemIndex = inventory.first(newItems[choice].getType());
@@ -441,85 +422,9 @@ public class Arena implements Listener {
         if (heldItem == null || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK))
             return;
 
-        World world = player.getWorld();
-        Inventory inventory = player.getInventory();
-        ItemUseDelay itemUseDelay = delayMap.get(playerName);
-        if (itemUseDelay == null) {
-            itemUseDelay = new ItemUseDelay();
-            delayMap.put(playerName, itemUseDelay);
-        }
-
-        //TODO maybe I can make an actual Powerup class and implement an abstract method for each powerup
-        if (heldItem.getType().equals(Material.TNT)) {
-            long endTime = itemUseDelay.tnt;
-            if (System.currentTimeMillis() > endTime) {
-                decrementAmountOfItemStack(inventory, heldItem);
-                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    Location location = clickedBlock.getLocation();
-                    TNTPrimed tnt = world.spawn(location.add(0, 1, 0), TNTPrimed.class);
-                    tnt.setMetadata("FIL", new FixedMetadataValue(plugin, "FIL"));
-                } else if (event.getAction() == Action.RIGHT_CLICK_AIR) {
-                    Location location = player.getLocation();
-                    TNTPrimed tnt = world.spawn(location.add(0, 1, 0), TNTPrimed.class);
-                    tnt.setMetadata("FIL", new FixedMetadataValue(plugin, "FIL"));
-                    Vector vector = player.getLocation().getDirection();
-                    vector.add(new Vector(0.0, 0.15, 0.0));
-                    tnt.setVelocity(vector);
-                }
-                itemUseDelay.tnt = System.currentTimeMillis() + tntUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot place TNT yet.");
-            }
-        } else if (heldItem.getType().equals(Material.BLAZE_ROD)) {
-            long endTime = itemUseDelay.invis;
-            if (System.currentTimeMillis() > endTime) {
-                decrementAmountOfItemStack(inventory, heldItem);
-                for (Player other : Bukkit.getOnlinePlayers())
-                    other.hidePlayer(plugin, player);
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    Player playerToMakeVisible = Bukkit.getPlayerExact(playerName);
-                    if (playerToMakeVisible == null)
-                        return;
-                    playerToMakeVisible.sendMessage(GOOD + "You are now visible!");
-                    for (Player other : Bukkit.getOnlinePlayers())
-                        other.showPlayer(plugin, playerToMakeVisible);
-                }, 60);
-                player.sendMessage(GOOD + "You are now invisible!");
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1.1f);
-                itemUseDelay.invis = System.currentTimeMillis() + invisUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot go invisible yet.");
-            }
-        } else if (heldItem.getType().equals(Material.FEATHER)) {
-            long endTime = itemUseDelay.boost;
-            if (System.currentTimeMillis() > endTime) {
-                if (isPlayerNearWebs(player, 1)) {
-                    player.sendMessage(BAD + "You can not use a boost while near webs!");
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-                    return;
-                }
-                decrementAmountOfItemStack(inventory, heldItem);
-                Location loc = player.getLocation().clone();
-                loc.setPitch(-30f);
-                Vector vector = loc.getDirection();
-                vector.add(new Vector(0.0, 0.15, 0.0));
-                vector.multiply(2);
-                player.sendMessage(GOOD + "Woooooosh...");
-                player.setVelocity(vector);
-                player.playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1f, 1f);
-                itemUseDelay.boost = System.currentTimeMillis() + boostUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot boost yet.");
-            }
-        } else if (heldItem.getType().equals(Material.EGG)) {
-            long endTime = itemUseDelay.chikun;
-            if (System.currentTimeMillis() > endTime) {
-                event.setCancelled(false);
-                itemUseDelay.chikun = System.currentTimeMillis() + chikunUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot throw eggs yet.");
-            }
-        }
+        Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
+        if (perk == null) return;
+        perk.activate(player, event.getAction(), event.getClickedBlock(), event, null);
         player.updateInventory();
     }
 
@@ -534,72 +439,9 @@ public class Arena implements Listener {
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (!started || !playing.containsKey(playerName)) return;
         event.setCancelled(true);
-        Inventory inventory = player.getInventory();
-        ItemUseDelay itemUseDelay = delayMap.get(playerName);
-        if (itemUseDelay == null) {
-            itemUseDelay = new ItemUseDelay();
-            delayMap.put(playerName, itemUseDelay);
-        }
-
-        if (heldItem.getType().equals(Material.TRIPWIRE_HOOK)) {
-            long endTime = itemUseDelay.hook;
-            if (System.currentTimeMillis() > endTime) {
-                if (isPlayerNearWebs(rightClicked, 2)) {
-                    player.sendMessage(BAD + "You can not launch a player near webs!");
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
-                    return;
-                }
-                decrementAmountOfItemStack(inventory, heldItem);
-                Location playerLoc = player.getLocation();
-                playerLoc.setPitch(-30f);
-                Vector playerDir = playerLoc.getDirection();
-                playerDir.add(new Vector(0.0, 0.15, 0.0));
-                playerDir.multiply(2);
-                rightClicked.getLocation().setDirection(playerDir);
-                rightClicked.setVelocity(playerDir);
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
-                itemUseDelay.hook = System.currentTimeMillis() + hookUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot launch players yet.");
-            }
-        } else if (heldItem.getType().equals(Material.COBWEB)) {
-            long endTime = itemUseDelay.web;
-            if (System.currentTimeMillis() > endTime) {
-                decrementAmountOfItemStack(inventory, heldItem);
-                createWebsAroundPlayer(rightClicked, 2);
-                itemUseDelay.web = System.currentTimeMillis() + deWebUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot web players yet.");
-            }
-        } else if (heldItem.getType().equals(Material.FLINT_AND_STEEL)) {
-            long endTime = itemUseDelay.steal;
-            if (System.currentTimeMillis() > endTime) {
-                decrementAmountOfItemStack(inventory, heldItem);
-                int chance = random.nextInt(100);
-                if (chance < 50) {
-                    player.sendMessage(BAD + "Badluck! Your attempt to steal an ability has backfired.");
-                    if (!doesPlayerHaveItems(player)) {
-                        player.sendMessage(BAD + "It appears you do not have any abilities left...");
-                        launchThief(player);
-                    } else {
-                        takeAbility(null, player);
-                        player.sendMessage(BAD + "A random ability has been taken away from you!");
-                    }
-                } else {
-                    if (!doesPlayerHaveItems(rightClicked)) {
-                        player.sendMessage(BAD + "It appears your victim does not have any abilities left...");
-                        launchThief(player);
-                    } else {
-                        takeAbility(player, rightClicked);
-                        player.sendMessage(GOOD + "A random ability has been taken away from " + rightClicked.getName() + "!");
-                        rightClicked.sendMessage(BAD + "A random ability has been stolen by " + player.getName() + "!");
-                    }
-                }
-                itemUseDelay.steal = System.currentTimeMillis() + stealUseDelay;
-            } else {
-                player.sendMessage(BAD + "You cannot attempt to steal abilities yet.");
-            }
-        }
+        Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
+        if (perk == null) return;
+        perk.activate(player, null, null, null, rightClicked);
         player.updateInventory();
     }
 
@@ -959,91 +801,6 @@ public class Arena implements Listener {
                     target.sendMessage(message);
             }
         }
-    }
-
-    private void decrementAmountOfItemStack(Inventory inventory, ItemStack itemStack) {
-        if (itemStack.getAmount() == 1)
-            inventory.remove(itemStack);
-        else
-            itemStack.setAmount(itemStack.getAmount() - 1);
-    }
-
-    private void createWebsAroundPlayer(Player player, int radius) {
-        int px = player.getLocation().getBlockX();
-        int py = player.getLocation().getBlockY();
-        int pz = player.getLocation().getBlockZ();
-        World world = player.getWorld();
-        //TODO maybe it can be improved
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    if (x * x + y * y + z * z <= radius * radius) {
-                        int xpos = px + x;
-                        int ypos = py + y;
-                        int zpos = pz + z;
-                        if (world.getBlockAt(xpos, ypos, zpos).getType().equals(Material.AIR) &&
-                                arenaCuboidArea.isInside(xpos, ypos, zpos))
-                            world.getBlockAt(xpos, ypos, zpos).setType(Material.COBWEB);
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean isPlayerNearWebs(Player player, int radius) {
-        int px = player.getLocation().getBlockX();
-        int py = player.getLocation().getBlockY();
-        int pz = player.getLocation().getBlockZ();
-        World world = player.getWorld();
-        //TODO maybe it can be improved
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    if (x * x + y * y + z * z <= radius * radius) {
-                        int xpos = px + x;
-                        int ypos = py + y;
-                        int zpos = pz + z;
-
-                        if (world.getBlockAt(xpos, ypos, zpos).getType().equals(Material.COBWEB) &&
-                                arenaCuboidArea.isInside(xpos, ypos, zpos))
-                            return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean doesPlayerHaveItems(Player player) {
-        for (ItemStack itemStack : player.getInventory().getStorageContents()) {
-            if (itemStack != null && !itemStack.getType().equals(Material.AIR))
-                return true;
-        }
-        return false;
-    }
-
-    private void launchThief(Player player) {
-        player.sendMessage(BAD + "Go away, thief!");
-        Vector dir = player.getLocation().getDirection();
-        Vector vec = new Vector(-dir.getX() * 10.0D, 0.6D, -dir.getZ() * 10.0D);
-        player.setVelocity(vec);
-    }
-
-    private void takeAbility(Player to, Player from) {
-        int randomAbilitySlot = random.nextInt(7);
-        while (from.getInventory().getStorageContents()[randomAbilitySlot] == null ||
-                from.getInventory().getStorageContents()[randomAbilitySlot].getType().equals(Material.AIR))
-            randomAbilitySlot = random.nextInt(7);
-
-        ItemStack takenAway = from.getInventory().getStorageContents()[randomAbilitySlot];
-        if (takenAway.getAmount() == 1)
-            from.getInventory().remove(takenAway);
-        else
-            takenAway.setAmount(takenAway.getAmount() - 1);
-        ItemStack toGive = takenAway.clone();
-        toGive.setAmount(1);
-        if (to != null)
-            to.getInventory().addItem(toGive);
     }
 
     private ItemStack[] getContentsFromLoadout(Loadout loadout) {
