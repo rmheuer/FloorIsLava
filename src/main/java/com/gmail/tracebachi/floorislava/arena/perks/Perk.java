@@ -1,13 +1,13 @@
 package com.gmail.tracebachi.floorislava.arena.perks;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,28 +15,30 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 
 public abstract class Perk {
     private long delay;
-    private Map<UUID, Long> playerDelayCache;
+    private final Map<UUID, Long> playerDelayCache = new HashMap<>();
 
-    public abstract boolean onPerkActivation(Player player, Action clickAction, Block clickedBlock, PlayerInteractEvent interactEvent, Player rightClicked);
+    public abstract boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent entityEvent);
 
     public abstract Material getItem();
 
-    // TODO make a PerkActivateEvent as the argument number is growing.
-    // TODO cooldown message
-    public void activate(Player player, Action clickAction, Block clickedBlock, PlayerInteractEvent interactEvent, Player rightClicked) {
+    public abstract String getCooldownMessage();
+
+    public void activate(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent entityEvent) {
         long now = System.currentTimeMillis();
+        Player player = entityEvent == null ? interactEvent.getPlayer() : entityEvent.getPlayer();
         if (!playerDelayCache.containsKey(player.getUniqueId()))
             this.putInCache(player.getUniqueId(), now);
 
         if (now - playerDelayCache.get(player.getUniqueId()) < delay) { // At this point, the key ALWAYS exists.
-            player.sendMessage(BAD + "You cannot place TNT yet.");
+            player.sendMessage(BAD + this.getCooldownMessage());
             return;
         }
 
-        /* clickedBlock is null if clickAction == Action.RIGHT_CLICK_AIR
+        /*
            interactEvent is null if the perk is activated through a PlayerEntityInteractEvent
+           entityEvent is null if the perk is activated through a PlayerEntityInteractEvent
         */
-        if (!this.onPerkActivation(player, clickAction, clickedBlock, interactEvent, rightClicked)) return;
+        if (!this.onPerkActivation(interactEvent, entityEvent)) return;
         decrementAmountOfItemStack(player.getInventory(), player.getInventory().getItemInMainHand());
         this.putInCache(player.getUniqueId(), now);
     }

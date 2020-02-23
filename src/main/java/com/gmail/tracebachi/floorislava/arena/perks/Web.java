@@ -3,9 +3,8 @@ package com.gmail.tracebachi.floorislava.arena.perks;
 import com.gmail.tracebachi.floorislava.utils.CuboidArea;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Web extends Perk {
@@ -16,14 +15,19 @@ public class Web extends Perk {
     }
 
     @Override
-    public boolean onPerkActivation(Player player, Action clickAction, Block clickedBlock, PlayerInteractEvent interactEvent, Player rightClicked) {
-        createWebsAroundPlayer(rightClicked, 2);
+    public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
+        createWebsAroundPlayer((Player) e.getRightClicked(), 2);
         return true;
     }
 
     @Override
     public Material getItem() {
         return Material.COBWEB;
+    }
+
+    @Override
+    public String getCooldownMessage() {
+        return "You cannot web players yet.";
     }
 
     private void createWebsAroundPlayer(Player player, int radius) {

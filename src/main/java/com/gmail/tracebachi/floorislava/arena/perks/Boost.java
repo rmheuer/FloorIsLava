@@ -5,10 +5,7 @@ import com.gmail.tracebachi.floorislava.utils.CuboidArea;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -23,25 +20,30 @@ public class Boost extends Perk {
     }
 
     @Override
-    public boolean onPerkActivation(Player player, Action clickAction, Block clickedBlock, PlayerInteractEvent e, Player rightClicked) {
-        if (ArenaUtils.isPlayerNearWebs(player, 1, arenaArea)) {
-            player.sendMessage(BAD + "You can not use a boost while near webs!");
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+    public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
+        if (ArenaUtils.isPlayerNearWebs(e.getPlayer(), 1, arenaArea)) {
+            e.getPlayer().sendMessage(BAD + "You can not use a boost while near webs!");
+            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
             return false;
         }
-        Location loc = player.getLocation().clone();
+        Location loc = e.getPlayer().getLocation().clone();
         loc.setPitch(-30f);
         Vector vector = loc.getDirection();
         vector.add(new Vector(0.0, 0.15, 0.0));
         vector.multiply(2);
-        player.sendMessage(GOOD + "Woooooosh...");
-        player.setVelocity(vector);
-        player.playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1f, 1f);
+        e.getPlayer().sendMessage(GOOD + "Woooooosh...");
+        e.getPlayer().setVelocity(vector);
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GHAST_SHOOT, 1f, 1f);
         return true;
     }
 
     @Override
     public Material getItem() {
         return Material.FEATHER;
+    }
+
+    @Override
+    public String getCooldownMessage() {
+        return "You cannot boost yet.";
     }
 }

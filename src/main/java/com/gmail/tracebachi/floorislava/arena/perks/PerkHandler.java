@@ -37,7 +37,7 @@ public class PerkHandler {
         this.add("hook", new Hook(arenaArea));
         this.add("web", new Web(arenaArea));
         this.add("invis", new Invis(plugin));
-        this.add("Boost", new Boost(arenaArea));
+        this.add("boost", new Boost(arenaArea));
         this.add("chikun", new Chikun());
         this.add("steal", new Steal());
     }

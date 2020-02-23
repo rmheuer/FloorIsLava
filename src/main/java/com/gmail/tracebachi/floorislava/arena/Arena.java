@@ -424,7 +424,7 @@ public class Arena implements Listener {
 
         Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
         if (perk == null) return;
-        perk.activate(player, event.getAction(), event.getClickedBlock(), event, null);
+        perk.activate(event, null);
         player.updateInventory();
     }
 
@@ -435,13 +435,12 @@ public class Arena implements Listener {
             return;
         Player player = event.getPlayer();
         String playerName = player.getName();
-        Player rightClicked = (Player) rightClickedEntity;
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (!started || !playing.containsKey(playerName)) return;
         event.setCancelled(true);
         Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
         if (perk == null) return;
-        perk.activate(player, null, null, null, rightClicked);
+        perk.activate(null, event);
         player.updateInventory();
     }
 

@@ -1,10 +1,8 @@
 package com.gmail.tracebachi.floorislava.arena.perks;
 
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -16,26 +14,26 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 public class Steal extends Perk {
     @Override
-    public boolean onPerkActivation(Player player, Action clickAction, Block clickedBlock, PlayerInteractEvent interactEvent, Player rightClicked) {
+    public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
         Random random = new Random();
         int chance = random.nextInt(100);
         if (chance < 50) {
-            player.sendMessage(BAD + "Badluck! Your attempt to steal an ability has backfired.");
-            if (playerHasNoItems(player)) {
-                player.sendMessage(BAD + "It appears you do not have any abilities left...");
-                launchThief(player);
+            e.getPlayer().sendMessage(BAD + "Badluck! Your attempt to steal an ability has backfired.");
+            if (playerHasNoItems(e.getPlayer())) {
+                e.getPlayer().sendMessage(BAD + "It appears you do not have any abilities left...");
+                launchThief(e.getPlayer());
             } else {
-                takeAbility(null, player);
-                player.sendMessage(BAD + "A random ability has been taken away from you!");
+                takeAbility(null, e.getPlayer());
+                e.getPlayer().sendMessage(BAD + "A random ability has been taken away from you!");
             }
         } else {
-            if (playerHasNoItems(rightClicked)) {
-                player.sendMessage(BAD + "It appears your victim does not have any abilities left...");
-                launchThief(player);
+            if (playerHasNoItems((Player) e.getRightClicked())) {
+                e.getPlayer().sendMessage(BAD + "It appears your victim does not have any abilities left...");
+                launchThief(e.getPlayer());
             } else {
-                takeAbility(player, rightClicked);
-                player.sendMessage(GOOD + "A random ability has been taken away from " + rightClicked.getName() + "!");
-                rightClicked.sendMessage(BAD + "A random ability has been stolen by " + player.getName() + "!");
+                takeAbility(e.getPlayer(), (Player) e.getRightClicked());
+                e.getPlayer().sendMessage(GOOD + "A random ability has been taken away from " + e.getRightClicked().getName() + "!");
+                e.getRightClicked().sendMessage(BAD + "A random ability has been stolen by " + e.getPlayer().getName() + "!");
             }
         }
         return true;
@@ -44,6 +42,11 @@ public class Steal extends Perk {
     @Override
     public Material getItem() {
         return Material.FLINT_AND_STEEL;
+    }
+
+    @Override
+    public String getCooldownMessage() {
+        return "You cannot steal yet.";
     }
 
     private boolean playerHasNoItems(Player player) {

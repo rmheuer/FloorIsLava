@@ -5,9 +5,8 @@ import com.gmail.tracebachi.floorislava.utils.CuboidArea;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -21,25 +20,30 @@ public class Hook extends Perk {
     }
 
     @Override
-    public boolean onPerkActivation(Player player, Action clickAction, Block clickedBlock, PlayerInteractEvent interactEvent, Player rightClicked) {
-        if (ArenaUtils.isPlayerNearWebs(rightClicked, 2, arenaArea)) {
-            player.sendMessage(BAD + "You can not launch a player near webs!");
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+    public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
+        if (ArenaUtils.isPlayerNearWebs((Player) e.getRightClicked(), 2, arenaArea)) {
+            e.getPlayer().sendMessage(BAD + "You can not launch a player near webs!");
+            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
             return false;
         }
-        Location playerLoc = player.getLocation();
+        Location playerLoc = e.getPlayer().getLocation();
         playerLoc.setPitch(-30f);
         Vector playerDir = playerLoc.getDirection();
         playerDir.add(new Vector(0.0, 0.15, 0.0));
         playerDir.multiply(2);
-        rightClicked.getLocation().setDirection(playerDir);
-        rightClicked.setVelocity(playerDir);
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
+        e.getRightClicked().getLocation().setDirection(playerDir);
+        e.getRightClicked().setVelocity(playerDir);
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
         return true;
     }
 
     @Override
     public Material getItem() {
         return Material.TRIPWIRE_HOOK;
+    }
+
+    @Override
+    public String getCooldownMessage() {
+        return "You cannot throw players yet.";
     }
 }
