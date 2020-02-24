@@ -36,7 +36,7 @@ public class Invis extends Perk {
 
     @Override
     public Material getItem() {
-        return Material.END_ROD;
+        return Material.BLAZE_ROD;
     }
 
     @Override

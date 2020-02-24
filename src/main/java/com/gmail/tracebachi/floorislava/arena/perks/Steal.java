@@ -15,6 +15,12 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 public class Steal extends Perk {
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
+        if (e == null) {
+            interactEvent.getPlayer().sendMessage(BAD + "What are you trying to do? Burning the ground?");
+            return false;
+        }
+        if (!(e.getRightClicked() instanceof Player)) return false;
+        Player rightClicked = (Player) e.getRightClicked();
         Random random = new Random();
         int chance = random.nextInt(100);
         if (chance < 50) {
@@ -27,13 +33,13 @@ public class Steal extends Perk {
                 e.getPlayer().sendMessage(BAD + "A random ability has been taken away from you!");
             }
         } else {
-            if (playerHasNoItems((Player) e.getRightClicked())) {
+            if (playerHasNoItems(rightClicked)) {
                 e.getPlayer().sendMessage(BAD + "It appears your victim does not have any abilities left...");
                 launchThief(e.getPlayer());
             } else {
-                takeAbility(e.getPlayer(), (Player) e.getRightClicked());
-                e.getPlayer().sendMessage(GOOD + "A random ability has been taken away from " + e.getRightClicked().getName() + "!");
-                e.getRightClicked().sendMessage(BAD + "A random ability has been stolen by " + e.getPlayer().getName() + "!");
+                takeAbility(e.getPlayer(), rightClicked);
+                e.getPlayer().sendMessage(GOOD + "A random ability has been taken away from " + rightClicked.getName() + "!");
+                rightClicked.sendMessage(BAD + "A random ability has been stolen by " + e.getPlayer().getName() + "!");
             }
         }
         return true;

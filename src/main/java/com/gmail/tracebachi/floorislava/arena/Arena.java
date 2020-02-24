@@ -278,11 +278,11 @@ public class Arena implements Listener {
         startDegradeOn = config.getInt("StartDegradeOn");
         degradeOn = config.getInt("DegradeOnTick");
 
-        perkHandler = new PerkHandler(config, this.arenaCuboidArea, plugin);
-
         arenaCuboidArea = new CuboidArea(
                 config.getConfigurationSection("ArenaArea.One"),
                 config.getConfigurationSection("ArenaArea.Two"));
+
+        perkHandler = new PerkHandler(arenaCuboidArea, plugin);
 
         watchCuboidArea = new CuboidArea(
                 config.getConfigurationSection("WaitArea.One"),

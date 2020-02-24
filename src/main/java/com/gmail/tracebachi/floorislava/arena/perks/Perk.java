@@ -27,7 +27,7 @@ public abstract class Perk {
         long now = System.currentTimeMillis();
         Player player = entityEvent == null ? interactEvent.getPlayer() : entityEvent.getPlayer();
         if (!playerDelayCache.containsKey(player.getUniqueId()))
-            this.putInCache(player.getUniqueId(), now);
+            this.playerDelayCache.put(player.getUniqueId(), 0L);
 
         if (now - playerDelayCache.get(player.getUniqueId()) < delay) { // At this point, the key ALWAYS exists.
             player.sendMessage(BAD + this.getCooldownMessage());
