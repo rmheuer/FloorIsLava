@@ -21,6 +21,7 @@ public class TNT extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
+        if (e == null) return false;
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Location location = Objects.requireNonNull(e.getClickedBlock(),
                     "If a block was right clicked, why'd this be null?").getLocation();

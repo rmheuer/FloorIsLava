@@ -18,6 +18,7 @@ public class Invis extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
+        if (e == null) return false;
         for (Player other : Bukkit.getOnlinePlayers())
             other.hidePlayer(plugin, e.getPlayer());
         Bukkit.getScheduler().runTaskLater(plugin, () -> {

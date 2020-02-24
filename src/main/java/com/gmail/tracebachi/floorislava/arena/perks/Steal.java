@@ -15,10 +15,7 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 public class Steal extends Perk {
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
-        if (e == null) {
-            interactEvent.getPlayer().sendMessage(BAD + "What are you trying to do? Burning the ground?");
-            return false;
-        }
+        if (e == null) return false;
         if (!(e.getRightClicked() instanceof Player)) return false;
         Player rightClicked = (Player) e.getRightClicked();
         Random random = new Random();

@@ -21,10 +21,7 @@ public class Hook extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
-        if (e == null) {
-            interactEvent.getPlayer().sendMessage(BAD + "Shouldn't you launch players... and not anything else?");
-            return false;
-        }
+        if (e == null) return false;
         if (!(e.getRightClicked() instanceof Player)) return false;
         Player rightClicked = (Player) e.getRightClicked();
         if (ArenaUtils.isPlayerNearWebs(rightClicked, 2, arenaArea)) {

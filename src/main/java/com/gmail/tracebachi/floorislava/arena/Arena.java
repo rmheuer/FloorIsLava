@@ -777,6 +777,7 @@ public class Arena implements Listener {
         }
         if (recalcLeaderbaord)
             floorLeaderboard.recalculate();
+        perkHandler = new PerkHandler(arenaCuboidArea, plugin);
         started = false;
     }
 

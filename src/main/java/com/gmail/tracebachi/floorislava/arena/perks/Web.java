@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
-
 public class Web extends Perk {
     private CuboidArea arenaArea;
 
@@ -18,10 +16,7 @@ public class Web extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
-        if (e == null) {
-            interactEvent.getPlayer().sendMessage(BAD + "It may be better if you use webs in players instead.");
-            return false;
-        }
+        if (e == null) return false;
         if (!(e.getRightClicked() instanceof Player)) return false;
         Player rightClicked = (Player) e.getRightClicked();
         createWebsAroundPlayer(rightClicked, 2);

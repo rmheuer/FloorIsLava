@@ -6,8 +6,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Chikun extends Perk {
     @Override
-    public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent entityEvent) {
-        interactEvent.setCancelled(false);
+    public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
+        if (e == null) return false;
+        e.setCancelled(false);
         return true;
     }
 
