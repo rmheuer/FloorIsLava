@@ -1,6 +1,6 @@
 name: FloorIsLava
 main: com.gmail.tracebachi.floorislava.FloorIsLavaPlugin
-version: 2.7.0
+version: 2.7.1
 authors: [Trace Bachi (BigBossZee), Jeremy Lugo (Refrigerbater)]
 depend: [Vault, HolographicDisplays]
 api-version: '1.13'
