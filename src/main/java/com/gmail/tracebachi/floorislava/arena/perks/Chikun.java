@@ -5,9 +5,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Chikun extends Perk {
+
     @Override
     public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
-        if (e == null) return false;
+        if (e == null)
+            return false;
         e.setCancelled(false);
         return true;
     }

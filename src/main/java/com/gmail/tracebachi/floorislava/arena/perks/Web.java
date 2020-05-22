@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Web extends Perk {
+
     private CuboidArea arenaArea;
 
     public Web(CuboidArea arenaArea) {
@@ -16,8 +17,10 @@ public class Web extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
-        if (e == null) return false;
-        if (!(e.getRightClicked() instanceof Player)) return false;
+        if (e == null)
+            return false;
+        if (!(e.getRightClicked() instanceof Player))
+            return false;
         Player rightClicked = (Player) e.getRightClicked();
         createWebsAroundPlayer(rightClicked, 2);
         return true;

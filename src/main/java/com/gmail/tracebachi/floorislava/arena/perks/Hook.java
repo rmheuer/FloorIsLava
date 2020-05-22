@@ -13,6 +13,7 @@ import org.bukkit.util.Vector;
 import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 
 public class Hook extends Perk {
+
     private CuboidArea arenaArea;
 
     public Hook(CuboidArea arenaArea) {
@@ -21,8 +22,10 @@ public class Hook extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
-        if (e == null) return false;
-        if (!(e.getRightClicked() instanceof Player)) return false;
+        if (e == null)
+            return false;
+        if (!(e.getRightClicked() instanceof Player))
+            return false;
         Player rightClicked = (Player) e.getRightClicked();
         if (ArenaUtils.isPlayerNearWebs(rightClicked, 2, arenaArea)) {
             e.getPlayer().sendMessage(BAD + "You can not launch a player near webs!");

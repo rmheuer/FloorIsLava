@@ -13,6 +13,7 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 public class Boost extends Perk {
+
     private CuboidArea arenaArea;
 
     public Boost(CuboidArea arenaArea) {
@@ -21,7 +22,8 @@ public class Boost extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
-        if (e == null) return false;
+        if (e == null)
+            return false;
         if (ArenaUtils.isPlayerNearWebs(e.getPlayer(), 1, arenaArea)) {
             e.getPlayer().sendMessage(BAD + "You can not use a boost while near webs!");
             e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);

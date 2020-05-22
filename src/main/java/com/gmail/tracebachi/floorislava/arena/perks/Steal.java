@@ -13,10 +13,13 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 public class Steal extends Perk {
+
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
-        if (e == null) return false;
-        if (!(e.getRightClicked() instanceof Player)) return false;
+        if (e == null)
+            return false;
+        if (!(e.getRightClicked() instanceof Player))
+            return false;
         Player rightClicked = (Player) e.getRightClicked();
         Random random = new Random();
         int chance = random.nextInt(100);
@@ -53,7 +56,7 @@ public class Steal extends Perk {
     }
 
     private boolean playerHasNoItems(Player player) {
-        for (ItemStack itemStack : player.getInventory().getStorageContents()) {
+        for (ItemStack itemStack: player.getInventory().getStorageContents()) {
             if (itemStack != null && !itemStack.getType().equals(Material.AIR))
                 return true;
         }

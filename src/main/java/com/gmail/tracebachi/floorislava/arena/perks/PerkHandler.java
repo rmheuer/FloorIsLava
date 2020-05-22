@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PerkHandler {
+
     private ItemUseDelay delay;
     private CuboidArea arenaArea;
     private FloorIsLavaPlugin plugin;
@@ -23,8 +24,9 @@ public class PerkHandler {
     }
 
     public Perk getPerkFromMaterial(Material material) {
-        for (Perk perk : perks.values())
-            if (perk.getItem() == material) return perk;
+        for (Perk perk: perks.values())
+            if (perk.getItem() == material)
+                return perk;
         return null;
     }
 

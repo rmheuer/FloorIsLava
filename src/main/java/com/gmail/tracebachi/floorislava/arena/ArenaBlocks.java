@@ -61,12 +61,17 @@ public class ArenaBlocks {
     public void degradeBlocks(World world, int amount) {
         Point lower = cuboidArea.getLower();
         Point upper = cuboidArea.getUpper();
+        boolean topDecay = amount % 2 == 0;
         for (int i = lower.x(); i <= upper.x(); ++i) {
             for (int j = lower.z(); j <= upper.z(); ++j) {
                 if (i == (lower.x() + amount) || i == (upper.x() - amount) || j == (lower.z() + amount) || j == (upper.z() - amount)) {
                     for (int k = lower.y(); k <= upper.y(); ++k) {
                         world.getBlockAt(i, k, j).setType(Material.AIR);
                     }
+                }
+                if (topDecay) {
+                    int y = upper.y() - amount / 2;
+                    world.getBlockAt(i, y, j).setType(Material.AIR);
                 }
             }
         }

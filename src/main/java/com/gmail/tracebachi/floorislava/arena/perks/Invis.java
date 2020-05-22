@@ -10,6 +10,7 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 public class Invis extends Perk {
+
     private final FloorIsLavaPlugin plugin;
 
     public Invis(FloorIsLavaPlugin plugin) {
@@ -18,8 +19,9 @@ public class Invis extends Perk {
 
     @Override
     public boolean onPerkActivation(PlayerInteractEvent e, PlayerInteractEntityEvent entityEvent) {
-        if (e == null) return false;
-        for (Player other : Bukkit.getOnlinePlayers())
+        if (e == null)
+            return false;
+        for (Player other: Bukkit.getOnlinePlayers())
             other.hidePlayer(plugin, e.getPlayer());
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Player playerToMakeVisible = Bukkit.getPlayerExact(e.getPlayer().getName()); // So we have no logout issues.
@@ -27,7 +29,7 @@ public class Invis extends Perk {
                 return;
             playerToMakeVisible.sendMessage(BAD + "You are now visible!");
             e.getPlayer().playNote(playerToMakeVisible.getLocation(), Instrument.PIANO, Note.natural(1, Note.Tone.A));
-            for (Player other : Bukkit.getOnlinePlayers())
+            for (Player other: Bukkit.getOnlinePlayers())
                 other.showPlayer(plugin, playerToMakeVisible);
         }, 60);
         e.getPlayer().sendMessage(GOOD + "You are now invisible!");

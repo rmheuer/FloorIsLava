@@ -1,5 +1,6 @@
 package com.gmail.tracebachi.floorislava.arena.perks;
 
+import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
 
 public abstract class Perk {
+
     private long delay;
     private final Map<UUID, Long> playerDelayCache = new HashMap<>();
 
@@ -38,9 +40,10 @@ public abstract class Perk {
            interactEvent is null if the perk is activated through a PlayerEntityInteractEvent
            entityEvent is null if the perk is activated through a PlayerEntityInteractEvent
         */
-        if (!this.onPerkActivation(interactEvent, entityEvent)) return;
+        if (!this.onPerkActivation(interactEvent, entityEvent))
+            return;
         decrementAmountOfItemStack(player.getInventory(), player.getInventory().getItemInMainHand());
-        this.putInCache(player.getUniqueId(), now);
+        playerDelayCache.put(player.getUniqueId(), now);
     }
 
     public void setDelay(long delay) {
@@ -49,7 +52,8 @@ public abstract class Perk {
 
     public void putInCache(UUID playerUuid, long currentTime) {
         long oldDelay = 0;
-        if (playerDelayCache.containsKey(playerUuid)) oldDelay = playerDelayCache.get(playerUuid);
+        if (playerDelayCache.containsKey(playerUuid))
+            oldDelay = playerDelayCache.get(playerUuid);
         this.playerDelayCache.put(playerUuid, currentTime + oldDelay);
     }
 
