@@ -69,6 +69,7 @@ public class Arena implements Listener {
 
     private boolean started = false;
     private boolean enabled = true;
+    private int initialPlayerCount;
     private int wager = 0;
     private int countdown = 0;
     private int elapsedTicks = 0;
@@ -78,6 +79,7 @@ public class Arena implements Listener {
     private ArenaBlocks arenaBlocks;
 
     private int minimumPlayers;
+    private int minimumRewardPlayers;
     private int baseReward;
     private int winnerReward;
     private int maxCountdown;
@@ -153,7 +155,11 @@ public class Arena implements Listener {
             return;
         }
 
-        broadcast(GOOD + playerName + " has joined.", playerName);
+        if (playing.size() + 1 >= minimumRewardPlayers) {
+            broadcast(GOOD + playerName + " has joined. There are enough players for rewards.", playerName);
+        } else {
+            broadcast(GOOD + playerName + " has joined. There are not enough players for rewards.", playerName);
+        }
         playing.put(playerName, null);
         resetCountdown();
 
@@ -218,7 +224,12 @@ public class Arena implements Listener {
         player.setFireTicks(0);
         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
                 "Turns out players don't have GENERIC_MAX_HEALTH anymore.").getValue());
-        broadcast(BAD + name + " has left.", null);
+        if (!started) {
+            if (playing.size() >= minimumRewardPlayers)
+                broadcast(BAD + name + " has left. There are still enough players for rewards.", null);
+            else
+                broadcast(BAD + name + " has left. There are no longer enough players for rewards.", null);
+        }
     }
 
     /**************************************************************************
@@ -267,6 +278,7 @@ public class Arena implements Listener {
 
     public void loadConfig(FileConfiguration config) {
         minimumPlayers = config.getInt("MinimumPlayers");
+        minimumRewardPlayers = config.getInt("MinimumRewardPlayers");
         baseReward = config.getInt("BaseReward");
         winnerReward = config.getInt("WinnerReward");
         maxCountdown = config.getInt("CountdownInSeconds");
@@ -649,6 +661,7 @@ public class Arena implements Listener {
         }
         arenaTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1, ticksPerCheck);
         started = true;
+        initialPlayerCount = playing.size();
     }
 
     private void tick() {
@@ -679,8 +692,10 @@ public class Arena implements Listener {
                 player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
                         "Players apparently no longer have GENERIC_MAX_HEALTH.").getValue());
                 player.sendMessage(GOOD + "Thanks for playing!");
-                player.getInventory().addItem(losePrize);
-                plugin.getEconomy().depositPlayer(player, scaledBaseReward);
+                if (shouldReward()) {
+                    player.getInventory().addItem(losePrize);
+                    plugin.getEconomy().depositPlayer(player, scaledBaseReward);
+                }
                 player.teleport(watchCuboidArea.getRandomLocationInside(world));
                 watching.add(player.getName());
                 broadcast(BAD + entry.getKey() + " fell! " + playing.size() + " left!");
@@ -694,7 +709,6 @@ public class Arena implements Listener {
             elapsedTicks++;
             return;
         }
-        //TODO why is this a for if all it does is announce the winner?
         for (Map.Entry<String, PlayerState> entry : playing.entrySet()) {
             Player player = Bukkit.getPlayerExact(entry.getKey());
             if (player == null)
@@ -703,16 +717,29 @@ public class Arena implements Listener {
             state.restoreInventory(player);
             state.restoreLocation(player);
             state.restoreGameMode(player);
-            floorLeaderboard.addOneToScore(entry.getKey());
             player.setFireTicks(0);
             player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
                     "Players apparently no longer have GENERIC_MAX_HEALTH.").getValue());
-            plugin.getLogger().info(entry.getKey() + " won a round. Amount = " + (scaledWinnerReward + wager));
-            player.sendMessage(GOOD + "You won! Here's a prize and $" + (scaledWinnerReward + wager));
-            broadcast(GOOD + entry.getKey() + " won that round and a prize of $" +
-                    (scaledWinnerReward + wager), player.getName());
-            player.getInventory().addItem(winPrize);
-            plugin.getEconomy().depositPlayer(player, (scaledWinnerReward + wager));
+            if (shouldReward()) {
+                floorLeaderboard.addOneToScore(entry.getKey());
+                plugin.getLogger().info(entry.getKey() + " won a round. Amount = " + (scaledWinnerReward + wager));
+                player.sendMessage(GOOD + "You won! Here's a prize and $" + (scaledWinnerReward + wager));
+                broadcast(GOOD + entry.getKey() + " won that round and a prize of $" +
+                        (scaledWinnerReward + wager), player.getName());
+                player.getInventory().addItem(winPrize);
+                plugin.getEconomy().depositPlayer(player, (scaledWinnerReward + wager));
+            } else {
+                if (wager != 0) {
+                    plugin.getLogger().info(entry.getKey() + " won a free round. Wager amount = " + wager);
+                    player.sendMessage(GOOD + "You won a free round! Here's the wager: $" + wager);
+                    broadcast(GOOD + entry.getKey() + " won that round and a wager of $" + wager, player.getName());
+                    plugin.getEconomy().depositPlayer(player, wager);
+                } else {
+                    plugin.getLogger().info(entry.getKey() + " won a free round.");
+                    player.sendMessage(GOOD + "You won a free round!");
+                    broadcast(GOOD + entry.getKey() + " won that round!", player.getName());
+                }
+            }
             wager = 0;
             Firework firework = player.getWorld().spawn(
                     player.getLocation().add(0, 1, 0),
@@ -728,6 +755,10 @@ public class Arena implements Listener {
             firework.setFireworkMeta(fireworkMeta);
         }
         postStopCleanup(true);
+    }
+
+    private boolean shouldReward() {
+        return initialPlayerCount >= minimumRewardPlayers;
     }
 
     private void countdownTick() {
@@ -758,6 +789,7 @@ public class Arena implements Listener {
     private void postStopCleanup(boolean recalcLeaderbaord) {
         degradeLevel = 0;
         elapsedTicks = 0;
+        initialPlayerCount = 0;
         for (String playerName : playing.keySet()) {
             Player player = Bukkit.getPlayerExact(playerName);
             if (player != null) {

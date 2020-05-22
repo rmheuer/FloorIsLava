@@ -1,6 +1,9 @@
 # The minimum number of players needed before game is started
 MinimumPlayers: 2
 
+# The minimum number of players needed for rewards to be given
+MinimumRewardPlayers: 4
+
 # The reward for losing
 BaseReward: 50
 
