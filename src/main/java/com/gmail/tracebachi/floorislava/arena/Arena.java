@@ -497,10 +497,8 @@ public class Arena implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         List<Block> blocksToBeDestroyed = event.blockList();
-        plugin.getLogger().info("There are " + blocksToBeDestroyed.size() + " blocks to be destroyed by tnt.");
         if (!event.getEntity().hasMetadata("FIL"))
             return;
-        plugin.getLogger().info("The exploding tnt also has the metadata set.");
         event.setCancelled(true);
         for (Block block : blocksToBeDestroyed) {
             if (arenaCuboidArea.isInside(block.getLocation())) {
