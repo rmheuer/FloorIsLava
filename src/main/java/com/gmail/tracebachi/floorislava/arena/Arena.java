@@ -155,7 +155,8 @@ public class Arena implements Listener {
             return;
         }
 
-        if (playing.size() + 1 >= minimumRewardPlayers) {
+        boolean rewardAllowed = playing.size() + 1 >= minimumRewardPlayers;
+        if (rewardAllowed) {
             broadcast(GOOD + playerName + " has joined. There are enough players for rewards.", playerName);
         } else {
             broadcast(GOOD + playerName + " has joined. There are not enough players for rewards.", playerName);
@@ -163,7 +164,10 @@ public class Arena implements Listener {
         playing.put(playerName, null);
         resetCountdown();
 
-        player.sendMessage(GOOD + "You have joined FloorIsLava.");
+        if (rewardAllowed)
+            player.sendMessage(GOOD + "You have joined FloorIsLava. There are enough players for rewards.");
+        else
+            player.sendMessage(GOOD + "You have joined FloorIsLava. There are not enough players for rewards.");
 
         World world = Bukkit.getWorld(worldName);
         Location location = watchCuboidArea.getRandomLocationInside(world);
