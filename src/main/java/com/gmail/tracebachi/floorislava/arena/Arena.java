@@ -624,6 +624,15 @@ public class Arena implements Listener {
         leave(event.getPlayer());
     }
 
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (!started && playing.containsKey(player.getName()) &&
+                player.getInventory().getItemInMainHand().getType() == Material.TRIDENT &&
+                (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
+            event.setCancelled(true);
+    }
+
     /*************************************************************************
      * Private Methods
      *************************************************************************/
