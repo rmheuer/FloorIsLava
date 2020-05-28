@@ -14,6 +14,12 @@ import static com.gmail.tracebachi.floorislava.utils.Prefixes.GOOD;
 
 public class Steal extends Perk {
 
+    private final Random random;
+
+    public Steal() {
+        random = new Random();
+    }
+
     @Override
     public boolean onPerkActivation(PlayerInteractEvent interactEvent, PlayerInteractEntityEvent e) {
         if (e == null)
@@ -21,7 +27,6 @@ public class Steal extends Perk {
         if (!(e.getRightClicked() instanceof Player))
             return false;
         Player rightClicked = (Player) e.getRightClicked();
-        Random random = new Random();
         int chance = random.nextInt(100);
         if (chance < 50) {
             e.getPlayer().sendMessage(BAD + "Badluck! Your attempt to steal an ability has backfired.");
@@ -57,10 +62,10 @@ public class Steal extends Perk {
 
     private boolean playerHasNoItems(Player player) {
         for (ItemStack itemStack: player.getInventory().getStorageContents()) {
-            if (itemStack != null && !itemStack.getType().equals(Material.AIR))
-                return true;
+            if (itemStack != null && itemStack.getType() != Material.AIR)
+                return false;
         }
-        return false;
+        return true;
     }
 
     private void launchThief(Player player) {
@@ -71,10 +76,9 @@ public class Steal extends Perk {
     }
 
     private void takeAbility(Player to, Player from) {
-        Random random = new Random();
         int randomAbilitySlot = random.nextInt(7);
         while (from.getInventory().getStorageContents()[randomAbilitySlot] == null ||
-                from.getInventory().getStorageContents()[randomAbilitySlot].getType().equals(Material.AIR))
+                from.getInventory().getStorageContents()[randomAbilitySlot].getType() == Material.AIR)
             randomAbilitySlot = random.nextInt(7);
 
         ItemStack takenAway = from.getInventory().getStorageContents()[randomAbilitySlot];
@@ -82,9 +86,10 @@ public class Steal extends Perk {
             from.getInventory().remove(takenAway);
         else
             takenAway.setAmount(takenAway.getAmount() - 1);
-        ItemStack toGive = takenAway.clone();
-        toGive.setAmount(1);
-        if (to != null)
+        if (to != null) {
+            ItemStack toGive = takenAway.clone();
+            toGive.setAmount(1);
             to.getInventory().addItem(toGive);
+        }
     }
 }
