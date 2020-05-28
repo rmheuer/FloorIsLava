@@ -5,7 +5,7 @@ plugins {
 
 
 group = 'com.gmail.tracebachi'
-version = '2.7.5'
+version = '2.7.6'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -20,4 +20,8 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
     compileOnly "com.github.MilkBowl:VaultAPI:1.7"
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.3.2'
+}
+
+shadowJar {
+    archiveClassifier.set(null)
 }
