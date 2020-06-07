@@ -1,6 +1,5 @@
 package com.gmail.tracebachi.floorislava.arena.perks;
 
-import com.gmail.tracebachi.floorislava.FloorIsLavaPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -48,13 +47,6 @@ public abstract class Perk {
 
     public void setDelay(long delay) {
         this.delay = delay;
-    }
-
-    public void putInCache(UUID playerUuid, long currentTime) {
-        long oldDelay = 0;
-        if (playerDelayCache.containsKey(playerUuid))
-            oldDelay = playerDelayCache.get(playerUuid);
-        this.playerDelayCache.put(playerUuid, currentTime + oldDelay);
     }
 
     private void decrementAmountOfItemStack(Inventory inventory, ItemStack itemStack) {

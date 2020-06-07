@@ -22,6 +22,7 @@ import com.gmail.tracebachi.floorislava.commands.FloorCommand;
 import com.gmail.tracebachi.floorislava.commands.FloorHoloCommand;
 import com.gmail.tracebachi.floorislava.commands.ManageFloorCommand;
 import com.gmail.tracebachi.floorislava.gui.FloorGuiMenuListener;
+import com.gmail.tracebachi.floorislava.gui.FloorModeVoteMenuListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -37,7 +38,8 @@ public class FloorIsLavaPlugin extends JavaPlugin {
 
     private static FloorIsLavaPlugin instance;
     private Arena arena;
-    private FloorGuiMenuListener listener;
+    private FloorGuiMenuListener guiMenuListener;
+    private FloorModeVoteMenuListener voteMenuListener;
     private Economy economy;
 
     @Override
@@ -65,8 +67,10 @@ public class FloorIsLavaPlugin extends JavaPlugin {
         arena = new Arena(this);
         arena.loadConfig(getConfig());
         getServer().getPluginManager().registerEvents(arena, this);
-        listener = new FloorGuiMenuListener(arena);
-        getServer().getPluginManager().registerEvents(listener, this);
+        guiMenuListener = new FloorGuiMenuListener(arena);
+        voteMenuListener = new FloorModeVoteMenuListener(arena);
+        getServer().getPluginManager().registerEvents(guiMenuListener, this);
+        getServer().getPluginManager().registerEvents(voteMenuListener, this);
 
         Objects.requireNonNull(getCommand("floor"), "floor command not found.")
                 .setExecutor(new FloorCommand(arena));
@@ -86,7 +90,7 @@ public class FloorIsLavaPlugin extends JavaPlugin {
         getCommand("floorholo").setExecutor(null);
         getCommand("floor").setExecutor(null);
          */
-        listener = null;
+        guiMenuListener = null;
         arena.forceStop(Bukkit.getConsoleSender(), false);
         arena.getFloorLeaderboard().save();
         arena.getFloorLeaderboard().clear();

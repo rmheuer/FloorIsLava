@@ -33,6 +33,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
+import static com.gmail.tracebachi.floorislava.utils.Prefixes.BAD;
+
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 2/18/16.
  */
@@ -67,7 +69,18 @@ public class FloorGuiMenuListener implements Listener {
         /* Menu Items */
         if (matchesItemStack(FloorGuiMenu.JOIN_ITEM, clickedItem)) {
             player.closeInventory();
-            arena.join(player);
+            if (!arena.isEnabled()) {
+                player.sendMessage(BAD + "Unable to join. FloorIsLava is currently disabled.");
+                return;
+            } else if (arena.hasStarted()) {
+                player.sendMessage(BAD + "Unable to join. FloorIsLava has already begun.");
+                return;
+            } else if (arena.containsPlayer(name)) {
+                player.sendMessage(BAD + "You are already waiting to play FloorIsLava.");
+                return;
+            }
+            FloorModeVoteMenu menu = new FloorModeVoteMenu();
+            menu.showTo(player);
             return;
         } else if (matchesItemStack(FloorGuiMenu.LEAVE_ITEM, clickedItem)) {
             player.closeInventory();

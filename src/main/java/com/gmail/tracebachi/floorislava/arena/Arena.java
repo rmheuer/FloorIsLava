@@ -69,6 +69,7 @@ public class Arena implements Listener {
 
     private boolean started = false;
     private boolean enabled = true;
+    private boolean noPerks;
     private int initialPlayerCount;
     private int wager = 0;
     private int countdown = 0;
@@ -93,6 +94,7 @@ public class Arena implements Listener {
     private CuboidArea arenaCuboidArea;
     private CuboidArea watchCuboidArea;
     private PerkHandler perkHandler;
+    private VoteHandler voteHandler;
 
     public Arena(FloorIsLavaPlugin plugin) {
         this.plugin = plugin;
@@ -137,23 +139,16 @@ public class Arena implements Listener {
         broadcast(GOOD + "+$" + amount + " by " + name + " ( = $" + wager + " )", name);
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public boolean containsPlayer(String playerName) {
+        return playing.containsKey(playerName);
+    }
+
     public void join(Player player) {
-        if (!enabled) {
-            player.sendMessage(BAD + "Unable to join. FloorIsLava is currently disabled.");
-            return;
-        }
-
-        if (started) {
-            player.sendMessage(BAD + "Unable to join. FloorIsLava has already begun.");
-            return;
-        }
-
         String playerName = player.getName();
-
-        if (playing.containsKey(playerName)) {
-            player.sendMessage(BAD + "You are already waiting to play FloorIsLava.");
-            return;
-        }
 
         boolean rewardAllowed = playing.size() + 1 >= minimumRewardPlayers;
         if (rewardAllowed) {
@@ -229,6 +224,7 @@ public class Arena implements Listener {
         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
                 "Turns out players don't have GENERIC_MAX_HEALTH anymore.").getValue());
         if (!started) {
+            voteHandler.removeVoteFor(name);
             if (playing.size() >= minimumRewardPlayers)
                 broadcast(BAD + name + " has left. There are still enough players for rewards.", null);
             else
@@ -299,6 +295,7 @@ public class Arena implements Listener {
                 config.getConfigurationSection("ArenaArea.Two"));
 
         perkHandler = new PerkHandler(arenaCuboidArea, plugin);
+        voteHandler = new VoteHandler();
 
         watchCuboidArea = new CuboidArea(
                 config.getConfigurationSection("WaitArea.One"),
@@ -391,6 +388,10 @@ public class Arena implements Listener {
                     .build();
             FireworkSpark.spark(effect, clickedBlock.getLocation());
             clickedBlock.setType(Material.AIR);
+            if (isNoPerks()) {
+                event.getPlayer().sendMessage(BAD + "Since this is a no-perk game, you have been given no perks.");
+                return;
+            }
             player.sendMessage(GOOD + "You have collected a treasure chest, enjoy your items!");
             //TODO should probably be optimized later on
             Random random = new Random();
@@ -438,6 +439,11 @@ public class Arena implements Listener {
         if (heldItem == null || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK))
             return;
 
+        if (isNoPerks()) {
+            event.getPlayer().sendMessage(BAD + "You cannot use perks in no-perk mode!");
+            return;
+        }
+
         Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
         if (perk == null) return;
         perk.activate(event, null);
@@ -454,6 +460,10 @@ public class Arena implements Listener {
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         if (!started || !playing.containsKey(playerName)) return;
         event.setCancelled(true);
+        if (isNoPerks()) {
+            event.getPlayer().sendMessage(BAD + "You cannot use perks in no-perk mode!");
+            return;
+        }
         Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
         if (perk == null) return;
         perk.activate(null, event);
@@ -642,6 +652,8 @@ public class Arena implements Listener {
             throw new IllegalStateException("Arena#start() called while arena is running!");
         World world = Bukkit.getWorld(worldName);
         arenaBlocks.save(world);
+        VoteHandler.VoteType type = voteHandler.choose();
+        this.noPerks = type == VoteHandler.VoteType.NO_PERKS;
         Iterator<Map.Entry<String, PlayerState>> iter = playing.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, PlayerState> entry = iter.next();
@@ -666,7 +678,16 @@ public class Arena implements Listener {
                 player.getInventory().setLeggings(null);
                 player.getInventory().setBoots(null);
                 player.teleport(arenaCuboidArea.getRandomLocationInside(world));
-                player.getInventory().setStorageContents(getContentsFromLoadout(loadout));
+                if (!isNoPerks()) {
+                    player.getInventory().setStorageContents(getContentsFromLoadout(loadout));
+                    player.sendMessage(GOOD + "This is a " + ChatColor.DARK_PURPLE + "perk "
+                            + ChatColor.GREEN + "round.");
+                } else {
+                    player.getInventory().setStorageContents(new ItemStack[0]);
+                    player.sendMessage(GOOD + "This is a " + ChatColor.RED + "no perk "
+                            + ChatColor.GREEN + "round.");
+                }
+
                 player.getInventory().setExtraContents(new ItemStack[0]);
             }
         }
@@ -823,6 +844,7 @@ public class Arena implements Listener {
         if (recalcLeaderbaord)
             floorLeaderboard.recalculate();
         perkHandler = new PerkHandler(arenaCuboidArea, plugin);
+        voteHandler.resetVotes();
         started = false;
     }
 
@@ -888,5 +910,13 @@ public class Arena implements Listener {
             contents[c].setAmount((loadout.steal));
         }
         return contents;
+    }
+
+    public boolean isNoPerks() {
+        return noPerks;
+    }
+
+    public VoteHandler getVoteHandler() {
+        return voteHandler;
     }
 }

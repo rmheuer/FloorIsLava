@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-public class FloorGuiMenu implements Listener {
+public class FloorGuiMenu {
 
     public static final ItemStack JOIN_ITEM = new ItemStack(Material.LEATHER_CHESTPLATE);
     public static final ItemStack LEAVE_ITEM = new ItemStack(Material.LEATHER_LEGGINGS);
@@ -50,8 +50,8 @@ public class FloorGuiMenu implements Listener {
     public static final ItemStack CHIKUN_ITEM = new ItemStack(Material.EGG);
     public static final ItemStack STEAL_ITEM = new ItemStack(Material.FLINT_AND_STEEL);
 
-    private Arena arena;
-    private Inventory inventory;
+    private final Arena arena;
+    private final Inventory inventory;
 
     public FloorGuiMenu(Arena arena) {
         this.arena = arena;
@@ -93,7 +93,7 @@ public class FloorGuiMenu implements Listener {
         ItemStack itemStackClone = itemStack.clone();
         itemStackClone.setAmount((amount <= 0) ? 1 : amount);
 
-        if(amount >= 1) {
+        if (amount >= 1) {
             itemStackClone.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
             ItemMeta meta = itemStackClone.getItemMeta();
             Objects.requireNonNull(meta, "The item meta is null for some reasons.")
