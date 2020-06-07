@@ -25,9 +25,9 @@ public class FloorModeVoteMenuListener implements Listener {
         if (clickedItem == null)
             return;
 
-        if (matchesItemStack(FloorModeVoteMenu.YES_PERKS_ITEM, clickedItem)) {
+        if (matchesItemStack(FloorModeVoteMenu.NO_PERKS_ITEM, clickedItem)) {
             player.closeInventory();
-            arena.getVoteHandler().addVoteForPerks(player.getName());
+            arena.getVoteHandler().addVoteForNoPerks(player.getName());
         } else if (matchesItemStack(FloorModeVoteMenu.YES_PERKS_ITEM, clickedItem)) {
             player.closeInventory();
             arena.getVoteHandler().addVoteForPerks(player.getName());

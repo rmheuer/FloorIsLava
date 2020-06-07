@@ -148,6 +148,11 @@ public class Arena implements Listener {
     }
 
     public void join(Player player) {
+        if (started) {
+            player.sendMessage(BAD + "You voted too late. FloorIsLava has already begun.");
+            return;
+        }
+
         String playerName = player.getName();
 
         boolean rewardAllowed = playing.size() + 1 >= minimumRewardPlayers;
