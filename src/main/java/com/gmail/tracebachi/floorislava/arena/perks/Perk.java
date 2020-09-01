@@ -41,7 +41,8 @@ public abstract class Perk {
         */
         if (!this.onPerkActivation(interactEvent, entityEvent))
             return;
-        decrementAmountOfItemStack(player.getInventory(), player.getInventory().getItemInMainHand());
+        if (player.getInventory().getItemInMainHand().getType() != Material.EGG)
+            decrementAmountOfItemStack(player.getInventory(), player.getInventory().getItemInMainHand());
         playerDelayCache.put(player.getUniqueId(), now);
     }
 
