@@ -295,7 +295,7 @@ public class Arena implements Listener {
         ticksPerCheck = config.getInt("TicksPerCheck");
         startDegradeOn = config.getInt("StartDegradeOn");
         degradeOn = config.getInt("DegradeOnTick");
-        disablePerksDegradationLevel = config.getInt("DisablePerksTick");
+        disablePerksDegradationLevel = config.getInt("DisablePerksDegradationLevel");
 
         arenaCuboidArea = new CuboidArea(
                 config.getConfigurationSection("ArenaArea.One"),
