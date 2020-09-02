@@ -74,3 +74,6 @@ StartDegradeOn: 25
 
 # Degrade every 'x' FloorIsLava ticks once degrading is started
 DegradeOnTick: 15
+
+# How many layers automatically removed to trigger perk disabling
+DisablePerksDegradationLevel: -1

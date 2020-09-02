@@ -90,6 +90,7 @@ public class Arena implements Listener {
     private int ticksPerCheck;
     private int startDegradeOn;
     private int degradeOn;
+    private int disablePerksDegradationLevel;
     private int boosterBroadcastRange;
     private CuboidArea arenaCuboidArea;
     private CuboidArea watchCuboidArea;
@@ -294,6 +295,7 @@ public class Arena implements Listener {
         ticksPerCheck = config.getInt("TicksPerCheck");
         startDegradeOn = config.getInt("StartDegradeOn");
         degradeOn = config.getInt("DegradeOnTick");
+        disablePerksDegradationLevel = config.getInt("DisablePerksTick");
 
         arenaCuboidArea = new CuboidArea(
                 config.getConfigurationSection("ArenaArea.One"),
@@ -377,7 +379,7 @@ public class Arena implements Listener {
         Inventory inventory = player.getInventory();
         String playerName = player.getName();
 
-        if (!started || !playing.containsKey(playerName)) {
+        if (!started || !playing.containsKey(playerName) || degradeLevel >= disablePerksDegradationLevel) {
             return;
         }
         Block clickedBlock = event.getClickedBlock();
@@ -470,7 +472,8 @@ public class Arena implements Listener {
             return;
         }
         Perk perk = perkHandler.getPerkFromMaterial(heldItem.getType());
-        if (perk == null) return;
+        if (perk == null)
+            return;
         perk.activate(null, event);
         player.updateInventory();
     }
@@ -743,6 +746,8 @@ public class Arena implements Listener {
                 arenaBlocks.degradeBlocks(world, degradeLevel);
                 degradeLevel++;
             }
+            if (degradeLevel == disablePerksDegradationLevel)
+                removePerks();
             elapsedTicks++;
             return;
         }
@@ -792,6 +797,15 @@ public class Arena implements Listener {
             firework.setFireworkMeta(fireworkMeta);
         }
         postStopCleanup(true);
+    }
+
+    private void removePerks() {
+        for (Map.Entry<String, PlayerState> entry: playing.entrySet()) {
+            Player player = Bukkit.getPlayerExact(entry.getKey());
+            if (player == null)
+                continue;
+            player.getInventory().clear();
+        }
     }
 
     private boolean shouldReward() {
