@@ -745,6 +745,8 @@ public class Arena implements Listener {
             if (elapsedTicks >= startDegradeOn && (elapsedTicks % degradeOn) == 0) {
                 arenaBlocks.degradeBlocks(world, degradeLevel);
                 degradeLevel++;
+                if (degradeLevel == disablePerksDegradationLevel - 1)
+                    broadcast(BAD + "Perks will be removed in a bit!");
                 if (degradeLevel == disablePerksDegradationLevel)
                     removePerks();
             }
