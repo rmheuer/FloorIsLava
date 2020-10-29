@@ -104,3 +104,12 @@ public class FloorIsLavaPlugin extends JavaPlugin {
         return instance;
     }
 }
+
+/* TODO
+[S▪G]|[Admin]|[Zorioux] Ast I got 4 ideas for floor
+[S▪G]|[Admin]|[Zorioux] 2 perks, 1. one that teleport you randomly to existing block away from your location
+[S▪G]|[Admin]|[Zorioux] 2. fake tnt, to distract people
+[S▪G]|[Admin]|[Zorioux] 3d withering for blocks
+[S▪G]|[Admin]|[Zorioux] and if possible to detect who dropped who
+[S▪G]|[Admin]|[Zorioux] I guess 3d withering could be the most useful
+ */
