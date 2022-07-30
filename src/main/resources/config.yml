@@ -76,4 +76,5 @@ StartDegradeOn: 25
 DegradeOnTick: 15
 
 # How many layers automatically removed to trigger perk disabling
-DisablePerksDegradationLevel: -1
+# Default is a million to disable perk disabling
+DisablePerksDegradationLevel: 1000000
