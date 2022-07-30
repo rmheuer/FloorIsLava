@@ -105,11 +105,11 @@ public class FloorGuiMenuListener implements Listener {
             change = -1;
         if (change == 1 && loadout.countSum() == maxPoints) {
             if (clickedItem.getType() != Material.AIR)
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+                player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
             return;
         } else if (change == -1 && loadout.countSum() == 0) {
             if (clickedItem.getType() != Material.AIR)
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+                player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
             return;
         }
 
@@ -197,9 +197,9 @@ public class FloorGuiMenuListener implements Listener {
 
     private void playSoundOnCondition(Player player, boolean flag) {
         if (flag)
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
+            player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 1, 1);
         else
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+            player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
     }
 
     private void updateItemStackAmount(Inventory inventory, ItemStack itemStack, int slot, int amount) {

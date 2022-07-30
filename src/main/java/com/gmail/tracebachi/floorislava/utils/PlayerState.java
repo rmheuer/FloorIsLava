@@ -28,9 +28,7 @@ public class PlayerState {
 
     private boolean flyAllowed;
     private Location location;
-    private ItemStack[] armor;
-    private ItemStack[] storage;
-    private ItemStack[] extra;
+    private ItemStack[] contents;
     private GameMode gameMode;
 
     public void save(Player target) {
@@ -38,16 +36,12 @@ public class PlayerState {
         flyAllowed = target.getAllowFlight();
         target.setGameMode(GameMode.SURVIVAL);
         location = target.getLocation();
-        armor = target.getInventory().getArmorContents();
-        storage = target.getInventory().getStorageContents();
-        extra = target.getInventory().getExtraContents();
+        contents = target.getInventory().getContents();
     }
 
     public void restoreInventory(Player target) {
         target.setHealth(20.0);
-        target.getInventory().setArmorContents(armor);
-        target.getInventory().setStorageContents(storage);
-        target.getInventory().setExtraContents(extra);
+        target.getInventory().setContents(contents);
     }
 
     public void restoreLocation(Player target) {

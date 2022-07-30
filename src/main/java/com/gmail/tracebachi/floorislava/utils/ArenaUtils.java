@@ -19,7 +19,7 @@ public class ArenaUtils {
                         int ypos = py + y;
                         int zpos = pz + z;
 
-                        if (world.getBlockAt(xpos, ypos, zpos).getType().equals(Material.COBWEB) &&
+                        if (world.getBlockAt(xpos, ypos, zpos).getType().equals(Material.WEB) &&
                                 arenaArea.isInside(xpos, ypos, zpos))
                             return true;
                     }

@@ -26,7 +26,7 @@ public class Boost extends Perk {
             return false;
         if (ArenaUtils.isPlayerNearWebs(e.getPlayer(), 1, arenaArea)) {
             e.getPlayer().sendMessage(BAD + "You can not use a boost while near webs!");
-            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ITEM_BREAK, 1, 1);
             return false;
         }
         Location loc = e.getPlayer().getLocation().clone();
@@ -36,7 +36,7 @@ public class Boost extends Perk {
         vector.multiply(2);
         e.getPlayer().sendMessage(GOOD + "Woooooosh...");
         e.getPlayer().setVelocity(vector);
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GHAST_SHOOT, 1f, 1f);
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.GHAST_FIREBALL, 1f, 1f);
         return true;
     }
 

@@ -22,7 +22,7 @@ public class Invis extends Perk {
         if (e == null)
             return false;
         for (Player other: Bukkit.getOnlinePlayers())
-            other.hidePlayer(plugin, e.getPlayer());
+            other.hidePlayer(e.getPlayer());
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Player playerToMakeVisible = Bukkit.getPlayerExact(e.getPlayer().getName()); // So we have no logout issues.
             if (playerToMakeVisible == null)
@@ -30,10 +30,10 @@ public class Invis extends Perk {
             playerToMakeVisible.sendMessage(BAD + "You are now visible!");
             e.getPlayer().playNote(playerToMakeVisible.getLocation(), Instrument.PIANO, Note.natural(1, Note.Tone.A));
             for (Player other: Bukkit.getOnlinePlayers())
-                other.showPlayer(plugin, playerToMakeVisible);
+                other.showPlayer(playerToMakeVisible);
         }, 60);
         e.getPlayer().sendMessage(GOOD + "You are now invisible!");
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1.1f);
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ORB_PICKUP, 1f, 1.1f);
         return true;
     }
 

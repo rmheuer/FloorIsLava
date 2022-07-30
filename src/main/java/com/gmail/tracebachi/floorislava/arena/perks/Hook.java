@@ -29,7 +29,7 @@ public class Hook extends Perk {
         Player rightClicked = (Player) e.getRightClicked();
         if (ArenaUtils.isPlayerNearWebs(rightClicked, 2, arenaArea)) {
             e.getPlayer().sendMessage(BAD + "You can not launch a player near webs!");
-            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ITEM_BREAK, 1, 1);
             return false;
         }
         Location playerLoc = e.getPlayer().getLocation();
@@ -39,7 +39,7 @@ public class Hook extends Perk {
         playerDir.multiply(2);
         e.getRightClicked().getLocation().setDirection(playerDir);
         e.getRightClicked().setVelocity(playerDir);
-        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
+        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.HURT_FLESH, 1f, 1f);
         return true;
     }
 

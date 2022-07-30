@@ -61,7 +61,7 @@ public class Steal extends Perk {
     }
 
     private boolean playerHasNoItems(Player player) {
-        for (ItemStack itemStack: player.getInventory().getStorageContents()) {
+        for (ItemStack itemStack: player.getInventory().getContents()) {
             if (itemStack != null && itemStack.getType() != Material.AIR)
                 return false;
         }
@@ -77,11 +77,11 @@ public class Steal extends Perk {
 
     private void takeAbility(Player to, Player from) {
         int randomAbilitySlot = random.nextInt(7);
-        while (from.getInventory().getStorageContents()[randomAbilitySlot] == null ||
-                from.getInventory().getStorageContents()[randomAbilitySlot].getType() == Material.AIR)
+        while (from.getInventory().getContents()[randomAbilitySlot] == null ||
+                from.getInventory().getContents()[randomAbilitySlot].getType() == Material.AIR)
             randomAbilitySlot = random.nextInt(7);
 
-        ItemStack takenAway = from.getInventory().getStorageContents()[randomAbilitySlot];
+        ItemStack takenAway = from.getInventory().getContents()[randomAbilitySlot];
         if (takenAway.getAmount() == 1)
             from.getInventory().remove(takenAway);
         else

@@ -11,6 +11,14 @@ a custom implemention that handles joining, breaking, and rewards differently.
 6. Once you have your desired settings, run `/mfloor reload` to reload the configuration file. 
 7. Verify anyone that should have permissions is given permissions with your permission handling plugin.
 
+## Building
+
+If on Windows: run `gradlew.bat build`
+
+Otherwise: run `./gradlew build`
+
+Result plugin JAR will be in `build/libs/FloorIsLava-VERSION.jar`
+
 ## Configuration
 Refer to the [config.yml](https://github.com/GeeItsZee/FloorIsLava/blob/master/src/main/resources/config.yml) in this repository or a similarly commented file in your `plugins/FloorIsLava/config.yml`. Each setting is described and can be tuned as desired.
 

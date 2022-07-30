@@ -29,7 +29,7 @@ public class Loadout {
 
     public static final ItemStack TNT_ITEM = new ItemStack(Material.TNT);
     public static final ItemStack HOOK_ITEM = new ItemStack(Material.TRIPWIRE_HOOK);
-    public static final ItemStack WEB_ITEM = new ItemStack(Material.COBWEB);
+    public static final ItemStack WEB_ITEM = new ItemStack(Material.WEB);
     public static final ItemStack INVIS_ITEM = new ItemStack(Material.BLAZE_ROD);
     public static final ItemStack BOOST_ITEM = new ItemStack(Material.FEATHER);
     public static final ItemStack CHIKUN_ITEM = new ItemStack(Material.EGG);

@@ -38,13 +38,13 @@ public class FloorGuiMenu {
     public static final ItemStack JOIN_ITEM = new ItemStack(Material.LEATHER_CHESTPLATE);
     public static final ItemStack LEAVE_ITEM = new ItemStack(Material.LEATHER_LEGGINGS);
     public static final ItemStack SCORE_ITEM = new ItemStack(Material.NETHER_STAR);
-    public static final ItemStack WATCH_ITEM = new ItemStack(Material.ENDER_EYE);
+    public static final ItemStack WATCH_ITEM = new ItemStack(Material.EYE_OF_ENDER);
     public static final ItemStack HELP_ITEM = new ItemStack(Material.MAP);
     public static final ItemStack POINTS_ITEM = new ItemStack(Material.EMERALD);
 
     public static final ItemStack TNT_ITEM = new ItemStack(Material.TNT);
     public static final ItemStack HOOK_ITEM = new ItemStack(Material.TRIPWIRE_HOOK);
-    public static final ItemStack WEB_ITEM = new ItemStack(Material.COBWEB);
+    public static final ItemStack WEB_ITEM = new ItemStack(Material.WEB);
     public static final ItemStack INVIS_ITEM = new ItemStack(Material.BLAZE_ROD);
     public static final ItemStack BOOST_ITEM = new ItemStack(Material.FEATHER);
     public static final ItemStack CHIKUN_ITEM = new ItemStack(Material.EGG);

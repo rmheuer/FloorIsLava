@@ -227,8 +227,9 @@ public class Arena implements Listener {
 
         player.sendMessage(GOOD + "You have left FloorIsLava.");
         player.setFireTicks(0);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
-                "Turns out players don't have GENERIC_MAX_HEALTH anymore.").getValue());
+//        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
+//                "Turns out players don't have GENERIC_MAX_HEALTH anymore.").getValue());
+        player.setHealth(player.getMaxHealth()); // [DOWNGRADE]
         if (!started) {
             voteHandler.removeVoteFor(name);
             if (playing.size() >= minimumRewardPlayers)
@@ -464,7 +465,7 @@ public class Arena implements Listener {
             return;
         Player player = event.getPlayer();
         String playerName = player.getName();
-        ItemStack heldItem = player.getInventory().getItemInMainHand();
+        ItemStack heldItem = player.getInventory().getItemInHand();
         if (!started || !playing.containsKey(playerName)) return;
         event.setCancelled(true);
         if (isNoPerks()) {
@@ -645,10 +646,14 @@ public class Arena implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!started && playing.containsKey(player.getName()) &&
-                player.getInventory().getItemInMainHand().getType() == Material.TRIDENT &&
-                (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
-            event.setCancelled(true);
+
+        // [DOWNGRADE] Don't know why this is relevant, as tridents are never obtained
+        //             Should be fine to remove
+
+//        if (!started && playing.containsKey(player.getName()) &&
+//                player.getInventory().getItemInHand().getType() == Material.TRIDENT &&
+//                (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
+//            event.setCancelled(true);
     }
 
     /*************************************************************************
@@ -687,16 +692,14 @@ public class Arena implements Listener {
                 player.getInventory().setBoots(null);
                 player.teleport(arenaCuboidArea.getRandomLocationInside(world));
                 if (!isNoPerks()) {
-                    player.getInventory().setStorageContents(getContentsFromLoadout(loadout));
+                    player.getInventory().setContents(getContentsFromLoadout(loadout));
                     player.sendMessage(GOOD + "This is a " + ChatColor.DARK_PURPLE + "perk "
                             + ChatColor.GREEN + "round.");
                 } else {
-                    player.getInventory().setStorageContents(new ItemStack[0]);
+                    player.getInventory().setContents(new ItemStack[0]);
                     player.sendMessage(GOOD + "This is a " + ChatColor.RED + "no perk "
                             + ChatColor.GREEN + "round.");
                 }
-
-                player.getInventory().setExtraContents(new ItemStack[0]);
             }
         }
         arenaTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1, ticksPerCheck);
@@ -729,8 +732,7 @@ public class Arena implements Listener {
                 state.restoreLocation(player);
                 state.restoreGameMode(player);
                 player.setFireTicks(0);
-                player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
-                        "Players apparently no longer have GENERIC_MAX_HEALTH.").getValue());
+                player.setHealth(player.getMaxHealth());
                 player.sendMessage(GOOD + "Thanks for playing!");
                 if (shouldReward()) {
                     player.getInventory().addItem(losePrize);
@@ -762,8 +764,7 @@ public class Arena implements Listener {
             state.restoreLocation(player);
             state.restoreGameMode(player);
             player.setFireTicks(0);
-            player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH),
-                    "Players apparently no longer have GENERIC_MAX_HEALTH.").getValue());
+            player.setHealth(player.getMaxHealth());
             if (shouldReward()) {
                 floorLeaderboard.addOneToScore(entry.getKey());
                 plugin.getLogger().info(entry.getKey() + " won a round. Amount = " + (scaledWinnerReward + wager));
@@ -847,7 +848,7 @@ public class Arena implements Listener {
             Player player = Bukkit.getPlayerExact(playerName);
             if (player != null) {
                 for (Player other : Bukkit.getOnlinePlayers()) {
-                    other.showPlayer(plugin, player);
+                    other.showPlayer(player);
                 }
             }
         }

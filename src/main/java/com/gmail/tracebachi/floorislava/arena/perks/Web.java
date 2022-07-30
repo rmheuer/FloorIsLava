@@ -28,7 +28,7 @@ public class Web extends Perk {
 
     @Override
     public Material getItem() {
-        return Material.COBWEB;
+        return Material.WEB;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Web extends Perk {
                         int zpos = pz + z;
                         if (world.getBlockAt(xpos, ypos, zpos).getType().equals(Material.AIR) &&
                                 arenaArea.isInside(xpos, ypos, zpos))
-                            world.getBlockAt(xpos, ypos, zpos).setType(Material.COBWEB);
+                            world.getBlockAt(xpos, ypos, zpos).setType(Material.WEB);
                     }
                 }
             }
