@@ -480,13 +480,11 @@ public class Arena implements Listener {
     }
 
     @EventHandler
-    public void onEntityPickupItem(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player) {
-            String name = event.getEntity().getName();
+    public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
+            String name = event.getPlayer().getName();
             if (started && playing.containsKey(name)) {
                 event.setCancelled(true);
             }
-        }
     }
 
     @EventHandler
@@ -628,14 +626,6 @@ public class Arena implements Listener {
             player.sendMessage(BAD + "That command is not allowed while in FloorIsLava.");
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
-        Player player = event.getPlayer();
-        String playerName = player.getName();
-        if (playing.containsKey(playerName))
-            event.setCancelled(true);
     }
 
     @EventHandler
