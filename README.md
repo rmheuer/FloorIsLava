@@ -2,6 +2,8 @@
 FloorIsLava is minigame plugin for Bukkit/Spigot servers. It's similar to the traditional `Spleef` minigame. It features
 a custom implemention that handles joining, breaking, and rewards differently.
 
+29 July 2022 - Modified by Ryan Heuer (rmheuer) to use 1.8.8 Spigot API
+
 ## First Use
 1. If you do not have the compiled plugin JAR file, compile this source using the Bukkit or Spigot API.
 2. Place the JAR file in your Bukkit/Spigot Minecraft server's `plugins/` folder.
